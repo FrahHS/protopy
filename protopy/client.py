@@ -1,10 +1,9 @@
 import socket
-from sys import stderr
-from packets.login.clientbound.setcompression import SetCompressionPacket
-from packets.packet import Packet, PacketMode
 from threading import Thread
-from datatypes.varint import Varint
 from packets.packetreader import PacketReader
+
+from packets.packet import Packet, PacketMode
+from packets.clientbountpackets import SetCompressionPacket
 
 packets_listeners = []
 
@@ -50,7 +49,6 @@ class Client:
                 # Build received packet
                 packet_reader = PacketReader(compression=self.compression)
 
-                print(f'Threshold: {self.threshold}')
                 packet = packet_reader.build_packet_from_raw_data(data, self.mode)
 
                 # Check for compression

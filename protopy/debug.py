@@ -1,11 +1,13 @@
 from threading import Thread
-import time
 import uuid
 
 from client import Client
-from packets import HandshakePacket, StatusRequestPacket, LoginStartPacket, LoginAcknowledged, LoginSuccessPacket, PingRequestPacket, LoginAcknowledged
-from packets.configuration.serverbound.clientinformationconfiguration import ClientInformationConfigurationPacket
+
+from packets.clientbountpackets import LoginSuccessPacket
+from packets.serverboundpackets import HandshakePacket, StatusRequestPacket, LoginStartPacket, LoginAcknowledged, PingRequestPacket, LoginAcknowledged, ClientInformationConfigurationPacket
+#from packets.configuration.serverbound.clientinformationconfiguration import ClientInformationConfigurationPacket
 from packets.packet import UnknowPacket
+from utils import logger
 
 host = 'localhost'
 port = 25565
@@ -25,15 +27,13 @@ client_information_configuration_packet = ClientInformationConfigurationPacket(
     allow_server_listing = True,
 )
 
-print(((client_information_configuration_packet.packet(True))))
-
 @client.listener()
 def _l(packet):
     if(isinstance(packet, UnknowPacket)):
         return
 
     if(isinstance(packet, LoginSuccessPacket)):
-        print(packet.response)
+        logger.debug(packet.response)
         client.sendPacket(LoginAcknowledged())
         client.sendPacket(client_information_configuration_packet)
         return

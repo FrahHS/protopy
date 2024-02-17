@@ -1,9 +1,8 @@
-from uuid import UUID
-
 from datatypes.buffer import Buffer
-from packets.packet import Packet, PacketDirection, PacketMode
+from packets.serverboundpackets import ServerBoundPacket
+from packets.packet import PacketDirection, PacketMode
 
-class LoginAcknowledged(Packet):
+class LoginAcknowledged(ServerBoundPacket):
     PACKET_ID = b'\x03'
     DIRECTION = PacketDirection.SERVER
     MODE = PacketMode.LOGIN

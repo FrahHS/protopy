@@ -13,6 +13,7 @@ class Buffer:
         return self.body
 
     def write(self, data) -> None:
+        print(self.body, data)
         if(isinstance(data, Buffer)):
             self.body += data.data
         else:

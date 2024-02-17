@@ -1,10 +1,10 @@
 from uuid import UUID
 
 from datatypes.buffer import Buffer
-from datatypes.varint import Varint
-from packets.packet import Packet, PacketDirection, PacketMode
+from packets.serverboundpackets import ServerBoundPacket
+from packets.packet import PacketDirection, PacketMode
 
-class ClientInformationConfigurationPacket(Packet):
+class ClientInformationConfigurationPacket(ServerBoundPacket):
     PACKET_ID = b'\x00'
     DIRECTION = PacketDirection.SERVER
     MODE = PacketMode.CONFIGURATION
@@ -20,8 +20,7 @@ class ClientInformationConfigurationPacket(Packet):
         self.enable_text_filtering: bool = enable_text_filtering
         self.allow_server_listing: bool = allow_server_listing
 
-
-    def write(self):
+    def _write(self):
         buffer = Buffer()
         buffer.write_string(self.locale)
         buffer.write_byte(self.view_distance)
@@ -33,7 +32,3 @@ class ClientInformationConfigurationPacket(Packet):
         buffer.write_boolean(self.allow_server_listing)
 
         return buffer
-
-    def packet(self, compression: bool = False) -> bytes:
-        packet = self.write()
-        return self.pack(self.PACKET_ID, packet, compression)

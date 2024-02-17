@@ -3,6 +3,7 @@ import struct, uuid, zlib
 from datatypes.varint import Varint
 from datatypes.datatypes import DataTypes
 from packets.packet import Packet, PacketDirection, PacketMode, UnknowPacket
+from utils import logger
 
 class PacketReader:
     all_packets = {}
@@ -14,7 +15,6 @@ class PacketReader:
         if(self.compression):
             packet_length, body = Varint.unpack(raw_data)
             data_length, body = Varint.unpack(body)
-            print(f'Data Length: {data_length}')
 
             #TODO: Handle zlib compresion
             body = zlib.decompress(body) if data_length != 0 else body
@@ -32,12 +32,11 @@ class PacketReader:
         new_packet = (packet_id.bytes, PacketDirection.CLIENT, mode,)
 
         if(not Packet.all_packets.keys().__contains__(new_packet)):
-            print(f'Packet not found!')
-            print(f'packet_id: {hex(packet_id.int)}')
-            print(f'packet_direction: {PacketDirection.CLIENT}')
-            print(f'packet_mode: {mode}')
-            print(f'packet_raw_data: {raw_data}')
-            print()
+            logger.warning(f'Packet not found!')
+            logger.info(f'packet_id: {hex(packet_id.int)}')
+            logger.info(f'packet_direction: {PacketDirection.CLIENT}')
+            logger.info(f'packet_mode: {mode}')
+            #logger.info(f'packet_raw_data: {raw_data}\n')
             return UnknowPacket(packet_id, raw_data)
 
         return Packet.all_packets[new_packet](raw_data)

@@ -1,7 +1,8 @@
 from datatypes.buffer import Buffer
-from packets.packet import Packet, PacketDirection, PacketMode
+from packets.serverboundpackets import ServerBoundPacket
+from packets.packet import PacketDirection, PacketMode
 
-class HandshakePacket(Packet):
+class HandshakePacket(ServerBoundPacket):
     PACKET_ID = b'\x00'
     DIRECTION = PacketDirection.SERVER
     MODE = PacketMode.HANDSHAKING
@@ -12,9 +13,7 @@ class HandshakePacket(Packet):
         self.server_port = server_port
         self.next_state = next_state
 
-        #super().__init__(self.PACKET_ID)
-
-    def write(self):
+    def _write(self):
         buffer = Buffer()
         buffer.write_varint(765)
         buffer.write_string(self.server_address)
@@ -23,6 +22,3 @@ class HandshakePacket(Packet):
 
         return buffer
 
-    def packet(self, compression: bool = False) -> bytes:
-        packet = self.write()
-        return self.pack(self.PACKET_ID, packet, compression)

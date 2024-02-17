@@ -1,9 +1,10 @@
 from uuid import UUID
 
 from datatypes.buffer import Buffer
-from packets.packet import Packet, PacketDirection, PacketMode
+from packets.serverboundpackets import ServerBoundPacket
+from packets.packet import PacketDirection, PacketMode
 
-class LoginStartPacket(Packet):
+class LoginStartPacket(ServerBoundPacket):
     PACKET_ID = b'\x00'
     DIRECTION = PacketDirection.SERVER
     MODE = PacketMode.LOGIN
@@ -13,13 +14,9 @@ class LoginStartPacket(Packet):
         self.name = name
         self.player_uuid = player_uuid
 
-    def write(self):
+    def _write(self):
         buffer = Buffer()
         buffer.write_string(self.name)
         buffer.write_uuid(self.player_uuid)
 
         return buffer
-
-    def packet(self, compression: bool = False) -> bytes:
-        packet = self.write()
-        return self.pack(self.PACKET_ID, packet, compression)
