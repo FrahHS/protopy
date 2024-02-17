@@ -33,9 +33,9 @@ class PacketReader:
 
         if(not Packet.all_packets.keys().__contains__(new_packet)):
             logger.warning(f'Packet not found!')
-            logger.info(f'packet_id: {hex(packet_id.int)}')
-            logger.info(f'packet_direction: {PacketDirection.CLIENT}')
-            logger.info(f'packet_mode: {mode}')
+            logger.debug(f'packet_id: {hex(packet_id.int)}')
+            logger.debug(f'packet_direction: {PacketDirection.CLIENT}')
+            logger.debug(f'packet_mode: {mode}')
             #logger.info(f'packet_raw_data: {raw_data}\n')
             return UnknowPacket(packet_id, raw_data)
 
@@ -67,8 +67,7 @@ class PacketReader:
                     pass
                 case DataTypes.LONG:
                     res = struct.unpack("Q", body)[0]
-
-                    body = body[len(bytes(res)):]
+                    body = body[len(str(res)):]
                     response.append(res)
                 case DataTypes.FLOAT:
                     # TODO: code for handling FLOAT type
@@ -77,10 +76,10 @@ class PacketReader:
                     # TODO: code for handling DOUBLE type
                     pass
                 case DataTypes.STRING:
-                    len, string = Varint.unpack(body)
+                    lenght, string = Varint.unpack(body)
 
-                    body = body[len+1:]
-                    response.append(string[:len].decode())
+                    body = body[lenght+1:]
+                    response.append(string[:lenght].decode())
                 case DataTypes.CHAT:
                     # TODO: code for handling CHAT type
                     pass
@@ -91,9 +90,8 @@ class PacketReader:
                     # TODO: code for handling IDENTIFIER type
                     pass
                 case DataTypes.VARINT:
-                    res, bytes = Varint.unpack(body)
-                    body = bytes
-
+                    res, bytes_body = Varint.unpack(body)
+                    body = bytes_body
                     response.append(res)
                 case DataTypes.VARLONG:
                     # TODO: code for handling VARLONG type
@@ -133,5 +131,5 @@ class PacketReader:
                     # TODO: Default case if the field doesn't match any of the defined types
                     pass
         if(body != b''):
-            print(f'parte del pacchetto ignorata: {body}')
+            logger.warning(f'parte del pacchetto ignorata: {body}')
         return response

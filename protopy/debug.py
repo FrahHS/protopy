@@ -3,7 +3,7 @@ import uuid
 
 from client import Client
 
-from packets.clientbountpackets import LoginSuccessPacket
+from packets.clientbountpackets import LoginSuccessPacket, SetCompressionPacket
 from packets.serverboundpackets import HandshakePacket, StatusRequestPacket, LoginStartPacket, LoginAcknowledged, PingRequestPacket, LoginAcknowledged, ClientInformationConfigurationPacket
 #from packets.configuration.serverbound.clientinformationconfiguration import ClientInformationConfigurationPacket
 from packets.packet import UnknowPacket
@@ -31,9 +31,12 @@ client_information_configuration_packet = ClientInformationConfigurationPacket(
 def _l(packet):
     if(isinstance(packet, UnknowPacket)):
         return
+    
+    if(isinstance(packet, SetCompressionPacket)):
+        logger.info(packet.threshold)
 
     if(isinstance(packet, LoginSuccessPacket)):
-        logger.debug(packet.response)
+        logger.info(packet.response)
         client.sendPacket(LoginAcknowledged())
         client.sendPacket(client_information_configuration_packet)
         return
@@ -54,11 +57,3 @@ login_start_packet = LoginStartPacket(
     uuid.UUID('d9f0fa31-b299-49a7-989e-d7a1e34a87f7')
 )
 client.sendPacket(login_start_packet)
-
-# Status Request
-#statusRequestPacket = StatusRequestPacket()
-#client.sendPacket(statusRequestPacket)
-
-# Ping Request
-#pingRequestPacket = PingRequestPacket()
-#client.sendPacket(pingRequestPacket)

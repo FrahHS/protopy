@@ -4,11 +4,6 @@ from packets import Packet
 from datatypes.buffer import Buffer
 
 class ServerBoundPacket(Packet, ABC):
-    def __init__(self, packet_id) -> None:
-        #packet = self.write()
-        #self.raw_data = self.pack(packet_id, packet,)
-        pass
-
     @abstractmethod
     def _write(self):
         pass
