@@ -1,12 +1,15 @@
-from datatypes.buffer import Buffer
-from packets.serverboundpackets import ServerBoundPacket
-from packets.packet import PacketDirection, PacketMode
+from protopy.datatypes.buffer import Buffer
+from protopy.packets.serverboundpackets import ServerBoundPacket
+from protopy.packets.packet import PacketDirection, PacketMode
 
 class StatusRequestPacket(ServerBoundPacket):
     PACKET_ID = b'\x00'
     DIRECTION = PacketDirection.SERVER
     MODE = PacketMode.STATUS
     NEXT_MODE = PacketMode.STATUS
+
+    def __init__(self, is_compressed: bool = False) -> None:
+        super().__init__(is_compressed)
 
     def _write(self) -> bytes:
         buffer = Buffer()

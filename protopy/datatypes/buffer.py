@@ -2,7 +2,7 @@ import struct
 import time
 from uuid import UUID
 
-from datatypes.varint import Varint
+from protopy.datatypes.varint import Varint
 
 class Buffer:
     def __init__(self) -> None:

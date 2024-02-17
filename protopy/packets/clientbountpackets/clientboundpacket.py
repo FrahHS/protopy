@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
 
-from packets.packet import Packet
-from packets.packetreader import PacketReader
+from protopy.packets.packet import Packet
+from protopy.packets.packetreader import PacketReader
 
 class ClientBoundPacket(Packet, ABC):
-    def __init__(self, raw_data: bytes) -> None:
+    def __init__(self, raw_data: bytes, is_compressed: bool = False) -> None:
+        super().__init__(is_compressed)
         self.raw_data = raw_data
         self._read()
 
@@ -14,6 +15,6 @@ class ClientBoundPacket(Packet, ABC):
 
     def _read(self):
         fmt = self._fmt()
-        packet_reader = PacketReader()
+        packet_reader = PacketReader(self.is_compressed)
         self.response = packet_reader.read(fmt, self.raw_data, self.MODE)
 

@@ -1,6 +1,8 @@
 import logging
+from datetime import datetime
 
-log_format = '[%(levelname)s] %(message)s'
+time_format = "%H:%M:%S"
+log_format = '[%(asctime)s] [%(levelname)s] %(message)s'
 
 LOG_COLORS = {
     'DEBUG': '\033[94m',  # Blu
@@ -24,7 +26,7 @@ logger.setLevel(logging.DEBUG)
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.DEBUG)
 
-console_formatter = ColoredFormatter(log_format)
+console_formatter = ColoredFormatter(log_format, datefmt=time_format)
 console_handler.setFormatter(console_formatter)
 
 logger.addHandler(console_handler)

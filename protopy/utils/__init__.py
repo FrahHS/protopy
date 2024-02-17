@@ -1,1 +1,1 @@
-from utils.logger import logger
+from protopy.utils.logger import logger

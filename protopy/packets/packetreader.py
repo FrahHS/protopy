@@ -1,9 +1,9 @@
 import struct, uuid, zlib
 
-from datatypes.varint import Varint
-from datatypes.datatypes import DataTypes
-from packets.packet import Packet, PacketDirection, PacketMode, UnknowPacket
-from utils import logger
+from protopy.datatypes.varint import Varint
+from protopy.datatypes.datatypes import DataTypes
+from protopy.packets.packet import Packet, PacketDirection, PacketMode, UnknowPacket
+from protopy.utils import logger
 
 class PacketReader:
     all_packets = {}
@@ -15,31 +15,22 @@ class PacketReader:
         if(self.compression):
             packet_length, body = Varint.unpack(raw_data)
             data_length, body = Varint.unpack(body)
-
-            #TODO: Handle zlib compresion
             body = zlib.decompress(body) if data_length != 0 else body
-
             packet_id, body = Varint.unpack(body)
         else:
             packet_length, body = Varint.unpack(raw_data)
             packet_id, body = Varint.unpack(body)
 
-
         return Varint(packet_id), body
 
-    def build_packet_from_raw_data(self, raw_data: bytes, mode: PacketMode):
+    def build_packet_from_raw_data(self, raw_data: bytes, mode: PacketMode, is_compressed: bool = False):
         packet_id, body = self.get_packet_id_and_data(raw_data, mode)
         new_packet = (packet_id.bytes, PacketDirection.CLIENT, mode,)
 
         if(not Packet.all_packets.keys().__contains__(new_packet)):
-            logger.warning(f'Packet not found!')
-            logger.debug(f'packet_id: {hex(packet_id.int)}')
-            logger.debug(f'packet_direction: {PacketDirection.CLIENT}')
-            logger.debug(f'packet_mode: {mode}')
-            #logger.info(f'packet_raw_data: {raw_data}\n')
-            return UnknowPacket(packet_id, raw_data)
+            return UnknowPacket(packet_id, mode, PacketDirection.CLIENT, raw_data)
 
-        return Packet.all_packets[new_packet](raw_data)
+        return Packet.all_packets[new_packet](raw_data, is_compressed)
 
     def read(self, _fmt, raw_data, mode: PacketMode) -> list:
         response = list()
@@ -66,7 +57,7 @@ class PacketReader:
                     # TODO: code for handling INT type
                     pass
                 case DataTypes.LONG:
-                    res = struct.unpack("Q", body)[0]
+                    res = struct.unpack(">Q", body)[0]
                     body = body[len(str(res)):]
                     response.append(res)
                 case DataTypes.FLOAT:
@@ -112,7 +103,7 @@ class PacketReader:
                     # TODO: code for handling ANGLE type
                     pass
                 case DataTypes.UUID:
-                    res = uuid.UUID(bytes=body[:16])
+                    res = uuid.uuid4()#uuid.UUID(bytes=body[:16])
                     response.append(res)
                     body = body[16:]
                 case DataTypes.OPTIONAL_X:

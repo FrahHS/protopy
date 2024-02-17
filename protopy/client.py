@@ -1,9 +1,10 @@
 import socket
 from threading import Thread
-from packets.packetreader import PacketReader
 
-from packets.packet import Packet, PacketMode
-from packets.clientbountpackets import SetCompressionPacket
+from protopy.packets.packetreader import PacketReader
+from protopy.packets.packet import Packet, PacketMode, UnknowPacket
+from protopy.packets.clientbountpackets import SetCompressionPacket
+from protopy.utils import logger
 
 packets_listeners = []
 
@@ -35,8 +36,10 @@ class Client:
         self.is_connected = False
 
     def sendPacket(self, packet: Packet) -> None:
+        logger.debug(f'[PACKET SENT] packet_id: {packet.PACKET_ID}')
         self.mode = packet.NEXT_MODE
-        raw_data = packet.packet(self.compression)
+        packet.is_compressed = self.compression
+        raw_data = packet.packet()
         self.socket.sendall(raw_data)
 
     def receive(self) -> bytes:
@@ -49,21 +52,23 @@ class Client:
                 # Build received packet
                 packet_reader = PacketReader(compression=self.compression)
 
-                packet = packet_reader.build_packet_from_raw_data(data, self.mode)
+                packet = packet_reader.build_packet_from_raw_data(data, self.mode, self.compression)
 
                 # Check for compression
                 if(isinstance(packet, SetCompressionPacket)):
                     self.compression = True
                     self.threshold = packet.threshold
 
+                if(not isinstance(packet, UnknowPacket)):
+                    self.mode = packet.NEXT_MODE
+
                 # Call listeners
                 self.call_packet_listeners(packet)
-                # TODO:
-                #self.mode = packet.nextMode
+
             else:
                 if self.is_connected:
                     self.is_connected = False
-                    print("Connection Lost.")
+                    logger.info("Connection Lost.")
 
     def listener(self):
         def inner(func):

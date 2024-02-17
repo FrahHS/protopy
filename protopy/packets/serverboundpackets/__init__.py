@@ -1,15 +1,19 @@
-from packets.serverboundpackets.serverboundpacket import ServerBoundPacket
+from protopy.packets.serverboundpackets.serverboundpacket import ServerBoundPacket
 
 # Handshaking
-from packets.serverboundpackets.handshaking.handshake import HandshakePacket
+from protopy.packets.serverboundpackets.handshaking.handshake import HandshakePacket
 
 # Status
-from packets.serverboundpackets.status.statusrequest import StatusRequestPacket
-from packets.serverboundpackets.status.pingrequest import PingRequestPacket
+from protopy.packets.serverboundpackets.status.statusrequest import StatusRequestPacket
+from protopy.packets.serverboundpackets.status.pingrequest import PingRequestPacket
 
 # Login
-from packets.serverboundpackets.login.loginstart import LoginStartPacket
-from packets.serverboundpackets.login.loginacknowledged import LoginAcknowledged
+from protopy.packets.serverboundpackets.login.loginstart import LoginStartPacket
+from protopy.packets.serverboundpackets.login.loginacknowledged import LoginAcknowledged
 
 # Configuration
-from packets.serverboundpackets.configuration.clientinformationconfiguration import ClientInformationConfigurationPacket
+from protopy.packets.serverboundpackets.configuration.clientinformationconfiguration import ClientInformationConfigurationPacket
+from protopy.packets.serverboundpackets.configuration.finishconfigurationpacket import FinishConfigurationPacket
+
+# Play
+from protopy.packets.serverboundpackets.play.serverboundkeepalivepacket import ServerboundKeepAlivePacket

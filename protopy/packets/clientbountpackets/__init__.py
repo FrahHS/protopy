@@ -1,10 +1,16 @@
-from packets.clientbountpackets.clientboundpacket import ClientBoundPacket
+from protopy.packets.clientbountpackets.clientboundpacket import ClientBoundPacket
 
 # Status
-from packets.clientbountpackets.status.statusresponse import StatusResponsePacket
-from packets.clientbountpackets.status.pingresponse import PingResponsePacket
+from protopy.packets.clientbountpackets.status.statusresponse import StatusResponsePacket
+from protopy.packets.clientbountpackets.status.pingresponse import PingResponsePacket
 
 
 # Login
-from packets.clientbountpackets.login.loginsuccess import LoginSuccessPacket
-from packets.clientbountpackets.login.setcompression import SetCompressionPacket
+from protopy.packets.clientbountpackets.login.loginsuccess import LoginSuccessPacket
+from protopy.packets.clientbountpackets.login.setcompression import SetCompressionPacket
+
+# Configuration
+from protopy.packets.clientbountpackets.configuration.finishconfigurationpacket import FinishConfigurationPacket
+
+# Play
+from protopy.packets.clientbountpackets.play.clientboundkeepalive import ClientboundKeepAlivePacket
