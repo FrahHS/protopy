@@ -7,7 +7,7 @@ class FinishConfigurationPacket(ClientBoundPacket):
     PACKET_ID = b'\x02'
     DIRECTION = PacketDirection.CLIENT
     MODE = PacketMode.CONFIGURATION
-    NEXT_MODE = PacketMode.PLAY
+    NEXT_MODE = PacketMode.CONFIGURATION
 
     def __init__(self, raw_data: bytes, is_compressed: bool = False) -> None:
         super().__init__(raw_data, is_compressed)

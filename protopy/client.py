@@ -36,11 +36,11 @@ class Client:
         self.is_connected = False
 
     def sendPacket(self, packet: Packet) -> None:
+        logger.debug(f'[PACKET SENT] packet_id: {packet.PACKET_ID}')
         self.mode = packet.NEXT_MODE
         packet.is_compressed = self.compression
         raw_data = packet.packet()
         self.socket.sendall(raw_data)
-        print(self.mode)
 
     def receive(self) -> bytes:
         return self.socket.recv(self.buffer_size)
@@ -61,7 +61,6 @@ class Client:
 
                 if(not isinstance(packet, UnknowPacket)):
                     self.mode = packet.NEXT_MODE
-                    print(self.mode)
 
                 # Call listeners
                 self.call_packet_listeners(packet)

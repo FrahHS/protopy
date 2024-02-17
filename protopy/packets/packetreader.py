@@ -21,7 +21,6 @@ class PacketReader:
             packet_length, body = Varint.unpack(raw_data)
             packet_id, body = Varint.unpack(body)
 
-
         return Varint(packet_id), body
 
     def build_packet_from_raw_data(self, raw_data: bytes, mode: PacketMode, is_compressed: bool = False):

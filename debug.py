@@ -20,24 +20,36 @@ client = Client(host, port)
 
 client.connect()
 
+client_information_configuration_packet = ClientInformationConfigurationPacket(
+    locale = 'it_IT',
+    view_distance = bytes.fromhex(hex(int('11111110', 2))[2:]),
+    chat_mode = 0,
+    chat_color = True,
+    displayer_skin_parts = b'\x01',
+    main_hand = 1,
+    enable_text_filtering = False,
+    allow_server_listing = True,
+)
+
 @client.listener()
 def _l(packet):
     if(isinstance(packet, UnknowPacket)):
         #logger.warning(f'Packet not found!')
-        logger.debug(f'packet_id: {hex(packet.packet_id.int)}')
+        logger.warning(f'[PACKET RECEIVED] packet_id: {hex(packet.packet_id.int)}')
         #logger.debug(f'raw_data: {packet.raw_data}')
         #logger.debug(f'packet_direction: {packet.direction}')
         #logger.debug(f'packet_mode: {packet.mode}')
         #logger.debug(f'packet_raw_data: {raw_data}\n')
         pass
     else:
-        logger.info(f'packet_id: {packet.PACKET_ID}')
+        logger.warning(f'[PACKET RECEIVED] packet_id: {packet.PACKET_ID}')
 
     if(isinstance(packet, LoginSuccessPacket)):
         client.sendPacket(LoginAcknowledged())
         pass
 
     if(isinstance(packet, clientbountpackets.FinishConfigurationPacket)):
+        client.sendPacket(client_information_configuration_packet)
         client.sendPacket(serverboundpackets.FinishConfigurationPacket())
         pass
 
@@ -54,6 +66,7 @@ def _l(packet):
         logger.info(body)
 
         client.sendPacket(ServerboundKeepAlivePacket(body, True))
+        logger.debug(f"[PACKET SENT] packet_id: b'\x05'")
 
 # Handshake
 next_state = 2
@@ -67,7 +80,7 @@ client.sendPacket(handshake_packet)
 
 # Login Start
 login_start_packet = LoginStartPacket(
-    'Steve',
+    'BelloFigo',
     uuid.UUID('d9f0fa31-b299-49a7-989e-d7a1e34a87f7')
 )
 client.sendPacket(login_start_packet)
