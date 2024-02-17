@@ -2,7 +2,7 @@ import uuid
 
 from protopy.client import Client
 
-from protopy.packets.clientbountpackets import LoginSuccessPacket, SetCompressionPacket
+from protopy.packets.clientbountpackets import LoginSuccessPacket, SetCompressionPacket, FinishConfigurationPacket
 from protopy.packets.serverboundpackets import HandshakePacket, StatusRequestPacket, LoginStartPacket, LoginAcknowledged, PingRequestPacket, LoginAcknowledged, ClientInformationConfigurationPacket
 from protopy.packets.packet import UnknowPacket
 from protopy.utils import logger
@@ -36,8 +36,11 @@ def _l(packet):
     if(isinstance(packet, LoginSuccessPacket)):
         logger.info(packet.response)
         client.sendPacket(LoginAcknowledged())
-        client.sendPacket(client_information_configuration_packet)
+        #client.sendPacket(client_information_configuration_packet)
         return
+    if(isinstance(packet, FinishConfigurationPacket)):
+        logger.info("finish configuration")
+        logger.info(packet.raw_data)
 
 # Handshake
 next_state = 2

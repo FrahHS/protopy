@@ -8,6 +8,9 @@ class StatusRequestPacket(ServerBoundPacket):
     MODE = PacketMode.STATUS
     NEXT_MODE = PacketMode.STATUS
 
+    def __init__(self, is_compressed: bool = False) -> None:
+        super().__init__(is_compressed)
+
     def _write(self) -> bytes:
         buffer = Buffer()
         buffer.write(b'\x00')

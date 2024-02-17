@@ -10,7 +10,8 @@ class ClientInformationConfigurationPacket(ServerBoundPacket):
     MODE = PacketMode.CONFIGURATION
     NEXT_MODE = PacketMode.CONFIGURATION
 
-    def __init__(self, locale: str, view_distance: bytes, chat_mode: int, chat_color: bool, displayer_skin_parts: bytes, main_hand: int, enable_text_filtering: bool, allow_server_listing: bool) -> None:
+    def __init__(self, locale: str, view_distance: bytes, chat_mode: int, chat_color: bool, displayer_skin_parts: bytes, main_hand: int, enable_text_filtering: bool, allow_server_listing: bool, is_compressed: bool = False) -> None:
+        super().__init__(is_compressed)
         self.locale: str = locale
         self.view_distance: bytes = view_distance
         self.chat_mode: int = chat_mode

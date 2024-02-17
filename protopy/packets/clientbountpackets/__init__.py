@@ -8,3 +8,6 @@ from protopy.packets.clientbountpackets.status.pingresponse import PingResponseP
 # Login
 from protopy.packets.clientbountpackets.login.loginsuccess import LoginSuccessPacket
 from protopy.packets.clientbountpackets.login.setcompression import SetCompressionPacket
+
+# Configuration
+from protopy.packets.clientbountpackets.configuration.finishconfigurationpacket import FinishConfigurationPacket

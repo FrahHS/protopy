@@ -8,6 +8,9 @@ class LoginAcknowledged(ServerBoundPacket):
     MODE = PacketMode.LOGIN
     NEXT_MODE = PacketMode.CONFIGURATION
 
+    def __init__(self, is_compressed: bool = False) -> None:
+        super().__init__(is_compressed)
+
     def _write(self):
         buffer = Buffer()
         buffer.write(b'')

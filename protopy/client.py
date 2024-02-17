@@ -50,7 +50,7 @@ class Client:
                 # Build received packet
                 packet_reader = PacketReader(compression=self.compression)
 
-                packet = packet_reader.build_packet_from_raw_data(data, self.mode)
+                packet = packet_reader.build_packet_from_raw_data(data, self.mode, self.compression)
 
                 # Check for compression
                 if(isinstance(packet, SetCompressionPacket)):

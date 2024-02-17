@@ -16,8 +16,8 @@ class PacketMode(Enum):
     PLAY = 5
 
 class Packet(ABC):
-    def __init__(self) -> None:
-        pass
+    def __init__(self, is_compressed) -> None:
+        self.is_compressed = is_compressed
 
     @staticmethod
     def data_pack(data) -> bytes:

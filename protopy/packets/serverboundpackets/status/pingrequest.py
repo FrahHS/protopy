@@ -10,6 +10,9 @@ class PingRequestPacket(ServerBoundPacket):
     MODE = PacketMode.STATUS
     NEXT_MODE = PacketMode.STATUS
 
+    def __init__(self, is_compressed: bool = False) -> None:
+        super().__init__(is_compressed)
+
     def _write(self):
         buffer = Buffer()
         buffer.write_long(round(time.time() * 1000))

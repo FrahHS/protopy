@@ -10,7 +10,8 @@ class LoginStartPacket(ServerBoundPacket):
     MODE = PacketMode.LOGIN
     NEXT_MODE = PacketMode.LOGIN
 
-    def __init__(self, name: str, player_uuid: UUID) -> None:
+    def __init__(self, name: str, player_uuid: UUID, is_compressed: bool = False) -> None:
+        super().__init__(is_compressed)
         self.name = name
         self.player_uuid = player_uuid
 

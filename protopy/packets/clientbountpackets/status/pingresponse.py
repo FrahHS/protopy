@@ -11,8 +11,8 @@ class PingResponsePacket(ClientBoundPacket):
     MODE = PacketMode.STATUS
     NEXT_MODE = PacketMode.STATUS
 
-    def __init__(self, raw_data: bytes) -> None:
-        super().__init__(raw_data)
+    def __init__(self, raw_data: bytes, is_compressed: bool = False) -> None:
+        super().__init__(raw_data, is_compressed)
     
     def _fmt(self):
         fmt = [

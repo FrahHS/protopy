@@ -27,7 +27,7 @@ class PacketReader:
 
         return Varint(packet_id), body
 
-    def build_packet_from_raw_data(self, raw_data: bytes, mode: PacketMode):
+    def build_packet_from_raw_data(self, raw_data: bytes, mode: PacketMode, is_compressed: bool = False):
         packet_id, body = self.get_packet_id_and_data(raw_data, mode)
         new_packet = (packet_id.bytes, PacketDirection.CLIENT, mode,)
 
@@ -39,7 +39,7 @@ class PacketReader:
             #logger.info(f'packet_raw_data: {raw_data}\n')
             return UnknowPacket(packet_id, raw_data)
 
-        return Packet.all_packets[new_packet](raw_data)
+        return Packet.all_packets[new_packet](raw_data, is_compressed)
 
     def read(self, _fmt, raw_data, mode: PacketMode) -> list:
         response = list()

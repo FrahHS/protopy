@@ -8,7 +8,8 @@ class HandshakePacket(ServerBoundPacket):
     MODE = PacketMode.HANDSHAKING
     NEXT_MODE = PacketMode.HANDSHAKING
 
-    def __init__(self, server_address: str, server_port: int, next_state: int) -> None:
+    def __init__(self, server_address: str, server_port: int, next_state: int, is_compressed: bool = False) -> None:
+        super().__init__(is_compressed)
         self.server_address = server_address
         self.server_port = server_port
         self.next_state = next_state
