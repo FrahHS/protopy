@@ -1,7 +1,7 @@
-from datatypes.datatypes import DataTypes
-from packets.clientbountpackets import ClientBoundPacket
-from packets.packet import PacketDirection, PacketMode
-from packets.packetreader import PacketReader
+from protopy.datatypes.datatypes import DataTypes
+from protopy.packets.clientbountpackets import ClientBoundPacket
+from protopy.packets.packet import PacketDirection, PacketMode
+from protopy.packets.packetreader import PacketReader
 
 class LoginSuccessPacket(ClientBoundPacket):
     PACKET_ID = b'\x02'

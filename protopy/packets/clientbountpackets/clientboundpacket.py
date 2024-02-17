@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from packets.packet import Packet
-from packets.packetreader import PacketReader
+from protopy.packets.packet import Packet
+from protopy.packets.packetreader import PacketReader
 
 class ClientBoundPacket(Packet, ABC):
     def __init__(self, raw_data: bytes) -> None:

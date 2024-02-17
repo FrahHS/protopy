@@ -1,9 +1,10 @@
 import socket
 from threading import Thread
-from packets.packetreader import PacketReader
 
-from packets.packet import Packet, PacketMode
-from packets.clientbountpackets import SetCompressionPacket
+from protopy.packets.packetreader import PacketReader
+from protopy.packets.packet import Packet, PacketMode
+from protopy.packets.clientbountpackets import SetCompressionPacket
+from protopy.utils import logger
 
 packets_listeners = []
 
@@ -63,7 +64,7 @@ class Client:
             else:
                 if self.is_connected:
                     self.is_connected = False
-                    print("Connection Lost.")
+                    logger.info("Connection Lost.")
 
     def listener(self):
         def inner(func):

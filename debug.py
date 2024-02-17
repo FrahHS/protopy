@@ -1,13 +1,11 @@
-from threading import Thread
 import uuid
 
-from client import Client
+from protopy.client import Client
 
-from packets.clientbountpackets import LoginSuccessPacket, SetCompressionPacket
-from packets.serverboundpackets import HandshakePacket, StatusRequestPacket, LoginStartPacket, LoginAcknowledged, PingRequestPacket, LoginAcknowledged, ClientInformationConfigurationPacket
-#from packets.configuration.serverbound.clientinformationconfiguration import ClientInformationConfigurationPacket
-from packets.packet import UnknowPacket
-from utils import logger
+from protopy.packets.clientbountpackets import LoginSuccessPacket, SetCompressionPacket
+from protopy.packets.serverboundpackets import HandshakePacket, StatusRequestPacket, LoginStartPacket, LoginAcknowledged, PingRequestPacket, LoginAcknowledged, ClientInformationConfigurationPacket
+from protopy.packets.packet import UnknowPacket
+from protopy.utils import logger
 
 host = 'localhost'
 port = 25565

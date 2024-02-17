@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from packets import Packet
-from datatypes.buffer import Buffer
+from protopy.packets import Packet
+from protopy.datatypes.buffer import Buffer
 
 class ServerBoundPacket(Packet, ABC):
     @abstractmethod

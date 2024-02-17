@@ -1,9 +1,9 @@
 import struct, uuid, zlib
 
-from datatypes.varint import Varint
-from datatypes.datatypes import DataTypes
-from packets.packet import Packet, PacketDirection, PacketMode, UnknowPacket
-from utils import logger
+from protopy.datatypes.varint import Varint
+from protopy.datatypes.datatypes import DataTypes
+from protopy.packets.packet import Packet, PacketDirection, PacketMode, UnknowPacket
+from protopy.utils import logger
 
 class PacketReader:
     all_packets = {}

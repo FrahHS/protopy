@@ -1,6 +1,6 @@
-from datatypes.buffer import Buffer
-from packets.serverboundpackets import ServerBoundPacket
-from packets.packet import PacketDirection, PacketMode
+from protopy.datatypes.buffer import Buffer
+from protopy.packets.serverboundpackets import ServerBoundPacket
+from protopy.packets.packet import PacketDirection, PacketMode
 
 class StatusRequestPacket(ServerBoundPacket):
     PACKET_ID = b'\x00'

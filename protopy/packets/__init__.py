@@ -1,9 +1,9 @@
-from packets.packet import Packet
-from packets.packet import PacketDirection
-from packets.packet import PacketMode
+from protopy.packets.packet import Packet
+from protopy.packets.packet import PacketDirection
+from protopy.packets.packet import PacketMode
 
-from packets.serverboundpackets import *
-from packets.clientbountpackets import *
+from protopy.packets.serverboundpackets import *
+from protopy.packets.clientbountpackets import *
 
 all_packets = {}
 for cls in ClientBoundPacket.__subclasses__():

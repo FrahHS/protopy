@@ -1,7 +1,7 @@
-from packets.clientbountpackets import ClientBoundPacket
-from packets.packet import PacketDirection, PacketMode
-from datatypes.datatypes import DataTypes
-from packets.packetreader import PacketReader
+from protopy.packets.clientbountpackets import ClientBoundPacket
+from protopy.packets.packet import PacketDirection, PacketMode
+from protopy.datatypes.datatypes import DataTypes
+from protopy.packets.packetreader import PacketReader
 
 class StatusResponsePacket(ClientBoundPacket):
     PACKET_ID = b'\x00'
