@@ -13,3 +13,7 @@ from protopy.packets.serverboundpackets.login.loginacknowledged import LoginAckn
 
 # Configuration
 from protopy.packets.serverboundpackets.configuration.clientinformationconfiguration import ClientInformationConfigurationPacket
+from protopy.packets.serverboundpackets.configuration.finishconfigurationpacket import FinishConfigurationPacket
+
+# Play
+from protopy.packets.serverboundpackets.play.serverboundkeepalivepacket import ServerboundKeepAlivePacket

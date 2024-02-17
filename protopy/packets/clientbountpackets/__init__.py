@@ -11,3 +11,6 @@ from protopy.packets.clientbountpackets.login.setcompression import SetCompressi
 
 # Configuration
 from protopy.packets.clientbountpackets.configuration.finishconfigurationpacket import FinishConfigurationPacket
+
+# Play
+from protopy.packets.clientbountpackets.play.clientboundkeepalive import ClientboundKeepAlivePacket

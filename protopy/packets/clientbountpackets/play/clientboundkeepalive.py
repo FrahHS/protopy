@@ -2,22 +2,22 @@ from protopy.datatypes.datatypes import DataTypes
 from protopy.packets.clientbountpackets import ClientBoundPacket
 from protopy.packets.packet import PacketDirection, PacketMode
 
-class SetCompressionPacket(ClientBoundPacket):
-    PACKET_ID = b'\x03'
+class ClientboundKeepAlivePacket(ClientBoundPacket):
+    PACKET_ID = b'\x24'
     DIRECTION = PacketDirection.CLIENT
-    MODE = PacketMode.LOGIN
-    NEXT_MODE = PacketMode.LOGIN
+    MODE = PacketMode.PLAY
+    NEXT_MODE = PacketMode.PLAY
 
     def __init__(self, raw_data: bytes, is_compressed: bool = False) -> None:
         super().__init__(raw_data, is_compressed)
     
     def _fmt(self):
         fmt = [
-            DataTypes.VARINT
+            DataTypes.LONG
         ]
 
         return fmt
 
     @property
-    def threshold(self):
+    def keep_alive_id(self):
         return self.response[0]

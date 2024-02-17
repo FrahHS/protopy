@@ -33,3 +33,16 @@ class ClientInformationConfigurationPacket(ServerBoundPacket):
         buffer.write_boolean(self.allow_server_listing)
 
         return buffer
+
+"""
+client_information_configuration_packet = ClientInformationConfigurationPacket(
+    locale = 'it_IT',
+    view_distance = bytes.fromhex(hex(int('11111110', 2))[2:]),
+    chat_mode = 0,
+    chat_color = True,
+    displayer_skin_parts = b'\x01',
+    main_hand = 1,
+    enable_text_filtering = False,
+    allow_server_listing = True,
+)
+"""

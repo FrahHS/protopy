@@ -15,10 +15,7 @@ class PacketReader:
         if(self.compression):
             packet_length, body = Varint.unpack(raw_data)
             data_length, body = Varint.unpack(body)
-
-            #TODO: Handle zlib compresion
             body = zlib.decompress(body) if data_length != 0 else body
-
             packet_id, body = Varint.unpack(body)
         else:
             packet_length, body = Varint.unpack(raw_data)
@@ -32,12 +29,7 @@ class PacketReader:
         new_packet = (packet_id.bytes, PacketDirection.CLIENT, mode,)
 
         if(not Packet.all_packets.keys().__contains__(new_packet)):
-            logger.warning(f'Packet not found!')
-            logger.debug(f'packet_id: {hex(packet_id.int)}')
-            logger.debug(f'packet_direction: {PacketDirection.CLIENT}')
-            logger.debug(f'packet_mode: {mode}')
-            #logger.info(f'packet_raw_data: {raw_data}\n')
-            return UnknowPacket(packet_id, raw_data)
+            return UnknowPacket(packet_id, mode, PacketDirection.CLIENT, raw_data)
 
         return Packet.all_packets[new_packet](raw_data, is_compressed)
 
@@ -66,7 +58,7 @@ class PacketReader:
                     # TODO: code for handling INT type
                     pass
                 case DataTypes.LONG:
-                    res = struct.unpack("Q", body)[0]
+                    res = struct.unpack(">Q", body)[0]
                     body = body[len(str(res)):]
                     response.append(res)
                 case DataTypes.FLOAT:
@@ -112,7 +104,7 @@ class PacketReader:
                     # TODO: code for handling ANGLE type
                     pass
                 case DataTypes.UUID:
-                    res = uuid.UUID(bytes=body[:16])
+                    res = uuid.uuid4()#uuid.UUID(bytes=body[:16])
                     response.append(res)
                     body = body[16:]
                 case DataTypes.OPTIONAL_X:

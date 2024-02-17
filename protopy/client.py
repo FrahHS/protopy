@@ -2,7 +2,7 @@ import socket
 from threading import Thread
 
 from protopy.packets.packetreader import PacketReader
-from protopy.packets.packet import Packet, PacketMode
+from protopy.packets.packet import Packet, PacketMode, UnknowPacket
 from protopy.packets.clientbountpackets import SetCompressionPacket
 from protopy.utils import logger
 
@@ -37,8 +37,10 @@ class Client:
 
     def sendPacket(self, packet: Packet) -> None:
         self.mode = packet.NEXT_MODE
-        raw_data = packet.packet(self.compression)
+        packet.is_compressed = self.compression
+        raw_data = packet.packet()
         self.socket.sendall(raw_data)
+        print(self.mode)
 
     def receive(self) -> bytes:
         return self.socket.recv(self.buffer_size)
@@ -57,10 +59,13 @@ class Client:
                     self.compression = True
                     self.threshold = packet.threshold
 
+                if(not isinstance(packet, UnknowPacket)):
+                    self.mode = packet.NEXT_MODE
+                    print(self.mode)
+
                 # Call listeners
                 self.call_packet_listeners(packet)
-                # TODO:
-                #self.mode = packet.nextMode
+
             else:
                 if self.is_connected:
                     self.is_connected = False

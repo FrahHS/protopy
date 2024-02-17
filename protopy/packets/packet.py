@@ -20,10 +20,12 @@ class Packet(ABC):
         self.is_compressed = is_compressed
 
     @staticmethod
-    def data_pack(data) -> bytes:
+    def data_pack(data: bytes) -> bytes:
         return Varint.data_pack(data)
 
 class UnknowPacket:
-    def __init__(self, packet_id: bytes, raw_data: bytes) -> None:
+    def __init__(self, packet_id: bytes, mode: PacketMode, direction: PacketDirection, raw_data: bytes) -> None:
         self.packet_id =packet_id
+        self.mode = mode,
+        self.direction = direction
         self.raw_data = raw_data
