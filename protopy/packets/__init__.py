@@ -1,23 +1,19 @@
 from packets.packet import Packet
+from packets.packet import PacketDirection
+from packets.packet import PacketMode
 
-# Handshaking bound to Server
-from packets.handshaking.serverbound.handshake import HandshakePacket
+from packets.serverboundpackets import *
+from packets.clientbountpackets import *
 
-# Status bound to Client
-from packets.status.clientbound.statusresponse import StatusResponsePacket
-from packets.status.clientbound.pingresponse import PingResponsePacket
+all_packets = {}
+for cls in ClientBoundPacket.__subclasses__():
+    if hasattr(cls, 'PACKET_ID'):
+        all_packets[(cls.PACKET_ID, cls.DIRECTION, cls.MODE)] = cls
+for cls in ServerBoundPacket.__subclasses__():
+    if hasattr(cls, 'PACKET_ID'):
+        all_packets[(cls.PACKET_ID, cls.DIRECTION, cls.MODE)] = cls
+Packet.all_packets = all_packets
 
-# Status bound to Server
-from packets.status.serverbound.statusrequest import StatusRequestPacket
-from packets.status.serverbound.pingrequest import PingRequestPacket
-
-# Login bound to Client
-from packets.login.clientbound.loginsuccess import LoginSuccessPacket
-from packets.login.clientbound.setcompression import SetCompressionPacket
-
-# Login bound to Server
-from packets.login.serverbound.loginstart import LoginStartPacket
-from packets.login.serverbound.loginacknowledged import LoginAcknowledged
+#Packet.all_packets = {(cls.PACKET_ID, cls.DIRECTION, cls.MODE): cls for cls in Packet.__subclasses__()}
 
 
-Packet.all_packets = {(cls.PACKET_ID, cls.DIRECTION, cls.MODE): cls for cls in Packet.__subclasses__()}

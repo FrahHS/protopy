@@ -1,9 +1,8 @@
-import struct, uuid
 from enum import Enum
-from datatypes.buffer import Buffer
+from abc import ABC, abstractmethod
 
+from datatypes.buffer import Buffer
 from datatypes.varint import Varint
-from datatypes.datatypes import DataTypes
 
 class PacketDirection(Enum):
     CLIENT = 1
@@ -16,28 +15,9 @@ class PacketMode(Enum):
     CONFIGURATION = 4
     PLAY = 5
 
-
-class Packet:
-    def __init__(self, packet_id) -> None:
-        #packet = self.write()
-        #self.raw_data = self.pack(packet_id, packet,)
+class Packet(ABC):
+    def __init__(self) -> None:
         pass
-
-    def write(self):
-        pass
-
-    def pack(self, packet_id: bytes, raw_data: bytes, compression: bool = False,) -> None:
-        packet = Buffer()
-        if(compression):
-            #TODO: Handle zlib compression
-            packet.write(b'\x00')
-            packet.write(packet_id)
-            packet.write(raw_data)
-        else:
-            packet.write(packet_id)
-            packet.write(raw_data)
-
-        return Packet.data_pack(packet.data)
 
     @staticmethod
     def data_pack(data) -> bytes:

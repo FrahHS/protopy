@@ -3,6 +3,7 @@ import struct, uuid, zlib
 from datatypes.varint import Varint
 from datatypes.datatypes import DataTypes
 from packets.packet import Packet, PacketDirection, PacketMode, UnknowPacket
+from utils import logger
 
 class PacketReader:
     all_packets = {}
@@ -14,7 +15,6 @@ class PacketReader:
         if(self.compression):
             packet_length, body = Varint.unpack(raw_data)
             data_length, body = Varint.unpack(body)
-            print(f'Data Length: {data_length}')
 
             #TODO: Handle zlib compresion
             body = zlib.decompress(body) if data_length != 0 else body
@@ -32,12 +32,11 @@ class PacketReader:
         new_packet = (packet_id.bytes, PacketDirection.CLIENT, mode,)
 
         if(not Packet.all_packets.keys().__contains__(new_packet)):
-            print(f'Packet not found!')
-            print(f'packet_id: {hex(packet_id.int)}')
-            print(f'packet_direction: {PacketDirection.CLIENT}')
-            print(f'packet_mode: {mode}')
-            print(f'packet_raw_data: {raw_data}')
-            print()
+            logger.warning(f'Packet not found!')
+            logger.debug(f'packet_id: {hex(packet_id.int)}')
+            logger.debug(f'packet_direction: {PacketDirection.CLIENT}')
+            logger.debug(f'packet_mode: {mode}')
+            #logger.info(f'packet_raw_data: {raw_data}\n')
             return UnknowPacket(packet_id, raw_data)
 
         return Packet.all_packets[new_packet](raw_data)
@@ -68,8 +67,7 @@ class PacketReader:
                     pass
                 case DataTypes.LONG:
                     res = struct.unpack("Q", body)[0]
-
-                    body = body[len(bytes(res)):]
+                    body = body[len(str(res)):]
                     response.append(res)
                 case DataTypes.FLOAT:
                     # TODO: code for handling FLOAT type
@@ -78,10 +76,10 @@ class PacketReader:
                     # TODO: code for handling DOUBLE type
                     pass
                 case DataTypes.STRING:
-                    len, string = Varint.unpack(body)
+                    lenght, string = Varint.unpack(body)
 
-                    body = body[len+1:]
-                    response.append(string[:len].decode())
+                    body = body[lenght+1:]
+                    response.append(string[:lenght].decode())
                 case DataTypes.CHAT:
                     # TODO: code for handling CHAT type
                     pass
@@ -92,9 +90,8 @@ class PacketReader:
                     # TODO: code for handling IDENTIFIER type
                     pass
                 case DataTypes.VARINT:
-                    res, bytes = Varint.unpack(body)
-                    body = bytes
-
+                    res, bytes_body = Varint.unpack(body)
+                    body = bytes_body
                     response.append(res)
                 case DataTypes.VARLONG:
                     # TODO: code for handling VARLONG type
@@ -134,5 +131,5 @@ class PacketReader:
                     # TODO: Default case if the field doesn't match any of the defined types
                     pass
         if(body != b''):
-            print(f'parte del pacchetto ignorata: {body}')
+            logger.warning(f'parte del pacchetto ignorata: {body}')
         return response
