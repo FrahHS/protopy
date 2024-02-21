@@ -2,7 +2,7 @@ import time
 
 import pytest
 
-from protopy.client import Client
+from protopy.client.tcpclient import Client
 from protopy.packets.clientbountpackets import StatusResponsePacket, PingResponsePacket
 from protopy.packets.serverboundpackets import HandshakePacket, StatusRequestPacket, PingRequestPacket
 
