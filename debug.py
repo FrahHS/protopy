@@ -1,7 +1,7 @@
 import uuid
 import zlib
 
-from protopy.client import Client
+from protopy.client.tcpclient import TcpClient
 from protopy.datatypes.varint import Varint
 
 from protopy.packets import serverboundpackets
@@ -16,20 +16,8 @@ from protopy.utils import logger
 host = 'localhost'
 port = 25565
 
-client = Client(host, port)
-
+client = TcpClient(host, port)
 client.connect()
-
-client_information_configuration_packet = ClientInformationConfigurationPacket(
-    locale = 'it_IT',
-    view_distance = bytes.fromhex(hex(int('11111110', 2))[2:]),
-    chat_mode = 0,
-    chat_color = True,
-    displayer_skin_parts = b'\x01',
-    main_hand = 1,
-    enable_text_filtering = False,
-    allow_server_listing = True,
-)
 
 @client.listener()
 def _l(packet):
@@ -49,7 +37,6 @@ def _l(packet):
         pass
 
     if(isinstance(packet, clientbountpackets.FinishConfigurationPacket)):
-        client.sendPacket(client_information_configuration_packet)
         client.sendPacket(serverboundpackets.FinishConfigurationPacket())
         pass
 
@@ -80,7 +67,7 @@ client.sendPacket(handshake_packet)
 
 # Login Start
 login_start_packet = LoginStartPacket(
-    'BelloFigo',
+    'Steve',
     uuid.UUID('d9f0fa31-b299-49a7-989e-d7a1e34a87f7')
 )
 client.sendPacket(login_start_packet)
