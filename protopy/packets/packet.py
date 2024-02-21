@@ -24,8 +24,8 @@ class Packet(ABC):
         return Varint.data_pack(data)
 
 class UnknowPacket:
-    def __init__(self, packet_id: bytes, mode: PacketMode, direction: PacketDirection, raw_data: bytes) -> None:
-        self.packet_id =packet_id
-        self.mode = mode,
-        self.direction = direction
+    def __init__(self, packet_id: Varint, mode: PacketMode, direction: PacketDirection, raw_data: bytes) -> None:
+        self.PACKET_ID = packet_id.bytes
+        self.MODE = mode,
+        self.DIRECTION = direction
         self.raw_data = raw_data

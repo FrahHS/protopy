@@ -7,10 +7,9 @@ from protopy.packets.packet import Packet, PacketMode, UnknowPacket
 from protopy.packets.clientbountpackets import SetCompressionPacket
 from protopy.utils import logger
 
-packets_listeners = []
-
 class TcpClient:
     def __init__(self, host: str, port: int, buffer_size: int = 2097151) -> None:
+        self.packets_listeners = []
         self.is_connected = False
 
         self.host = host
@@ -40,7 +39,7 @@ class TcpClient:
         self.socket.close()
 
     def sendPacket(self, packet: Packet) -> None:
-        logger.debug(f'[PACKET SENT] packet_id: {packet.PACKET_ID}')
+        logger.debug(f'[PACKET SENT] packet_id: {packet.PACKET_ID.hex()}')
         self.mode = packet.NEXT_MODE
         packet.is_compressed = self.compression
         raw_data = packet.packet()
@@ -49,17 +48,8 @@ class TcpClient:
     def receive(self) -> bytes:
         return self.socket.recv(self.buffer_size)
 
-    def packets_handler(self, data):
-        # Build received packet
-        packet_reader = PacketReader(compression=self.compression)
-
-        packet = packet_reader.build_packet_from_raw_data(data, self.mode, self.compression)
-
-        # Check for compression
-        if(isinstance(packet, SetCompressionPacket)):
-            self.compression = True
-            self.threshold = packet.threshold
-
+    def packets_handler(self, packet: Packet):
+        # Set connection mode
         if(not isinstance(packet, UnknowPacket)):
             self.mode = packet.NEXT_MODE
 
@@ -70,7 +60,15 @@ class TcpClient:
         while self.is_connected:
             if self.stream != b'':
                 lenght, self.stream = Varint.unpack(self.stream)
-                self.packets_handler(Varint.pack(lenght) + self.stream[:lenght])
+
+                raw_data = Varint.pack(lenght) + self.stream[:lenght]
+
+                # Build received packet
+                packet_reader = PacketReader(compression=self.compression)
+                packet = packet_reader.build_packet_from_raw_data(raw_data, self.mode, self.compression)
+
+                # Handle packet
+                self.packets_handler(packet)
                 self.stream = self.stream[lenght:]
 
     def listen(self) -> None:
@@ -84,10 +82,16 @@ class TcpClient:
 
     def listener(self):
         def inner(func):
-            packets_listeners.append(func)
+            self.add_listener(func)
             return func
         return inner
 
+    def add_listener(self, func):
+        self.packets_listeners.append(func)
+
+    def dispose_listener(self, func):
+        self.packets_listeners.remove(func)
+
     def call_packet_listeners(self, packet):
-        for func in packets_listeners:
+        for func in self.packets_listeners:
             func(packet)
