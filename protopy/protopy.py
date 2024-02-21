@@ -3,16 +3,13 @@ import zlib
 
 from protopy.client.tcpclient import TcpClient
 from protopy.datatypes.varint import Varint
-from protopy.packets import clientbountpackets
-from protopy.packets import serverboundpackets
-from protopy.packets.clientbountpackets.login.loginsuccess import LoginSuccessPacket
-from protopy.packets.serverboundpackets.handshaking.handshake import HandshakePacket
-from protopy.packets.serverboundpackets.login.loginacknowledged import LoginAcknowledged
-from protopy.packets.serverboundpackets.login.loginstart import LoginStartPacket
+
 from protopy.utils import logger
 
-from protopy.packets.clientbountpackets import SetCompressionPacket, ClientboundKeepAlivePacket
-from protopy.packets.serverboundpackets import ServerboundKeepAlivePacket
+from protopy.packets import clientbountpackets
+from protopy.packets import serverboundpackets
+from protopy.packets.clientbountpackets import LoginSuccessPacket, SetCompressionPacket, ClientboundKeepAlivePacket
+from protopy.packets.serverboundpackets import HandshakePacket, LoginAcknowledged, LoginStartPacket,ServerboundKeepAlivePacket
 
 class ProtoPY(TcpClient):
     def __init__(self, host: str, port: int, buffer_size: int = 2097151) -> None:
@@ -27,7 +24,7 @@ class ProtoPY(TcpClient):
 
         # Handle keep Alive
         if(isinstance(packet, ClientboundKeepAlivePacket)):
-            logger.info("keep alive received")
+            logger.debug("keep alive")
 
             packet_length, body = Varint.unpack(packet.raw_data)
             data_length, body = Varint.unpack(body)
@@ -35,7 +32,6 @@ class ProtoPY(TcpClient):
             packet_id, body = Varint.unpack(body)
 
             self.sendPacket(ServerboundKeepAlivePacket(body, True))
-
 
         super().packets_handler(packet)
 
@@ -49,6 +45,7 @@ class ProtoPY(TcpClient):
             next_state
         )
         self.sendPacket(handshake_packet)
+        logger.debug("handshake")
 
         # Login Start
         login_start_packet = LoginStartPacket(
@@ -56,6 +53,7 @@ class ProtoPY(TcpClient):
             uuid
         )
         self.sendPacket(login_start_packet)
+        logger.debug("login start...")
 
         # Handle login and configuration
         def _l(packet):
@@ -65,5 +63,6 @@ class ProtoPY(TcpClient):
             if(isinstance(packet, clientbountpackets.FinishConfigurationPacket)):
                 self.sendPacket(serverboundpackets.FinishConfigurationPacket())
                 self.dispose_listener(_l)
+                logger.info('Logged in')
 
         self.add_listener(_l)

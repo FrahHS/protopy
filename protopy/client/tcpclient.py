@@ -39,7 +39,6 @@ class TcpClient:
         self.socket.close()
 
     def sendPacket(self, packet: Packet) -> None:
-        logger.debug(f'[PACKET SENT] packet_id: {packet.PACKET_ID.hex()}')
         self.mode = packet.NEXT_MODE
         packet.is_compressed = self.compression
         raw_data = packet.packet()

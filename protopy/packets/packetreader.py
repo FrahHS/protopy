@@ -32,15 +32,16 @@ class PacketReader:
 
         return Packet.all_packets[new_packet](raw_data, is_compressed)
 
-    def read(self, _fmt, raw_data, mode: PacketMode) -> list:
+    def read(self, _fmt, raw_data, mode: PacketMode, suppress_warning: bool = False) -> list:
         response = list()
         packet_id, body = self.get_packet_id_and_data(raw_data, mode)
 
         for field in _fmt:
             match field:
                 case DataTypes.BOOLEAN:
-                    # TODO: code for handling BOOLEAN type
-                    pass
+                    res = struct.unpack("?", body[:1])[0]
+                    body = body[1:]
+                    response.append(res)
                 case DataTypes.BYTE:
                     # TODO: code for handling BYTE type
                     pass
@@ -57,8 +58,8 @@ class PacketReader:
                     # TODO: code for handling INT type
                     pass
                 case DataTypes.LONG:
-                    res = struct.unpack(">Q", body)[0]
-                    body = body[len(str(res)):]
+                    res = struct.unpack(">Q", body[:8])[0]
+                    body = body[8:]
                     response.append(res)
                 case DataTypes.FLOAT:
                     # TODO: code for handling FLOAT type
@@ -121,6 +122,6 @@ class PacketReader:
                 case _:
                     # TODO: Default case if the field doesn't match any of the defined types
                     pass
-        if(body != b''):
+        if(body != b'' and not suppress_warning):
             logger.warning(f'parte del pacchetto ignorata: {body}')
         return response
