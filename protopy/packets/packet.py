@@ -1,7 +1,7 @@
 from enum import Enum
 from abc import ABC, abstractmethod
 
-from protopy.datatypes.buffer import Buffer
+from protopy.packets.buffer import Buffer
 from protopy.datatypes.varint import Varint
 
 class PacketDirection(Enum):

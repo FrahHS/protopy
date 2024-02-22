@@ -11,6 +11,6 @@ class FinishConfigurationPacket(ClientBoundPacket):
 
     def __init__(self, raw_data: bytes, is_compressed: bool = False) -> None:
         super().__init__(raw_data, is_compressed)
-    
-    def _fmt(self):
-        return []
+
+    def _read(self, body):
+        pass

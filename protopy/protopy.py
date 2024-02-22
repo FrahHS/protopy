@@ -16,7 +16,7 @@ class ProtoPY(TcpClient):
         super().__init__(host, port, buffer_size)
         self.connect()
 
-    def packets_handler(self, packet):
+    def _packets_handler(self, packet):
         # Check for compression
         if(isinstance(packet, SetCompressionPacket)):
             self.compression = True
@@ -33,7 +33,7 @@ class ProtoPY(TcpClient):
 
             self.sendPacket(ServerboundKeepAlivePacket(body, True))
 
-        super().packets_handler(packet)
+        super()._packets_handler(packet)
 
     def login(self, username: str, uuid: UUID):
         # Handshake
