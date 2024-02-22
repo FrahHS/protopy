@@ -39,7 +39,7 @@ class Buffer:
         pass
 
     def write_long(self, data: int) -> None:
-        self.body += struct.pack("Q", round(time.time() * 1000))
+        self.body += struct.pack(">Q", data)
 
     #TODO
     def write_float(self, data: float) -> None:

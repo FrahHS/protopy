@@ -12,8 +12,9 @@ from protopy.packets.clientbountpackets import LoginSuccessPacket, SetCompressio
 from protopy.packets.serverboundpackets import HandshakePacket, LoginAcknowledged, LoginStartPacket,ServerboundKeepAlivePacket
 
 class ProtoPY(TcpClient):
-    def __init__(self, host: str, port: int, buffer_size: int = 2097151) -> None:
+    def __init__(self, host: str, port: int, protocol_version: int, buffer_size: int = 2097151) -> None:
         super().__init__(host, port, buffer_size)
+        self.protocol_version = protocol_version
         self.connect()
 
     def _packets_handler(self, packet):
@@ -25,13 +26,7 @@ class ProtoPY(TcpClient):
         # Handle keep Alive
         if(isinstance(packet, ClientboundKeepAlivePacket)):
             logger.debug("keep alive")
-
-            packet_length, body = Varint.unpack(packet.raw_data)
-            data_length, body = Varint.unpack(body)
-            body = zlib.decompress(body) if data_length != 0 else body
-            packet_id, body = Varint.unpack(body)
-
-            self.sendPacket(ServerboundKeepAlivePacket(body, True))
+            self.sendPacket(ServerboundKeepAlivePacket(packet.keep_alive_id, packet.is_compressed))
 
         super()._packets_handler(packet)
 
@@ -40,6 +35,7 @@ class ProtoPY(TcpClient):
         next_state = 2
 
         handshake_packet = HandshakePacket(
+            self.protocol_version,
             self.host,
             self.port,
             next_state

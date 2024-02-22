@@ -14,7 +14,7 @@ class ServerboundKeepAlivePacket(ServerBoundPacket):
 
     def _write(self):
         buffer = Buffer()
-        buffer.write(self.keep_alive_id)
+        buffer.write_long(self.keep_alive_id)
 
         return buffer
 
