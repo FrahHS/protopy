@@ -1,4 +1,7 @@
+import io
+import json, gzip
 import struct, uuid, zlib
+import nbtlib
 
 from protopy.datatypes.varint import Varint
 from protopy.datatypes.datatypes import DataTypes
@@ -70,11 +73,21 @@ class PacketReader:
 
     def read_string(self, data: str) -> None:
         lenght, string = Varint.unpack(data)
-        return(string[:lenght].decode(), data[lenght+1:])
+        return (string[:lenght].decode(), data[lenght+1:])
 
-    #TODO
-    def read_chat(self, data: str) -> None:
-        pass
+    #TODO: fix, is not reading full NBT Tag
+    def read_chat(self, data: bytes) -> None:
+        file = io.BytesIO((data))
+        nbt_file = nbtlib.File.parse(fileobj=file)
+
+        # A very unelegant way to fint nbt tag lenght in bytes
+        file_for_lenght = io.BytesIO(b'')
+        nbt_file.write(fileobj=file_for_lenght)
+        file_for_lenght.seek(0)
+        lenght = len(file_for_lenght.read())
+        data = data[lenght+1:]
+
+        return (nbt_file, data)
 
     #TODO
     def read_json_chat(self, data: str) -> None:
@@ -112,9 +125,8 @@ class PacketReader:
     def read_angle(self, data: int) -> None:
         pass
 
-    #TODO
     def read_uuid(self, data: uuid.UUID) -> None:
-        res = uuid.uuid4()#uuid.UUID(bytes=body[:16])
+        res = uuid.UUID(bytes=data[:16])
         return(res, data[16:])
 
     #TODO
