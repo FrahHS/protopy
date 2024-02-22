@@ -15,40 +15,88 @@ class PlayerChatMessagePacket(ClientBoundPacket):
     def __init__(self, raw_data: bytes, is_compressed: bool = False) -> None:
         super().__init__(raw_data, is_compressed)
 
-    def _fmt(self):
-        fmt = [
-            # Sender
-            DataTypes.UUID,
-            # Index
-            DataTypes.VARINT,
-            # Message Signature Present
-            DataTypes.BOOLEAN,
-        ]
+    def _read(self, body):
+        # Header
+        res, body = self.packet_reader.read_uuid(body)
+        self.response['sender'] = res
 
-        # Check for Message Signature Present
-        packet_reader = PacketReader(self.is_compressed)
-        res = packet_reader.read(fmt, self.raw_data, self.MODE, suppress_warning=True)
+        res, body = self.packet_reader.read_varint(body)
+        self.response['index'] = res
 
-        # TODO: Handle signature
-        if(res[2]):
-            # Message Signature bytes
-            fmt.append(DataTypes.BYTE_ARRAY)
+        res, body = self.packet_reader.read_boolean(body)
+        self.response['message_signature_present'] = res
 
-        fmt += [
-            # Message
-            DataTypes.STRING,
-            # Timestamp
-            DataTypes.LONG,
-            # Salt
-            DataTypes.LONG,
-            # Total Previous Messages
-            DataTypes.VARINT,
-            # Message ID
-            DataTypes.VARINT,
-        ]
+        # TODO: handle
+        if(self.response['message_signature_present']):
+            res, body = self.packet_reader.read_boolean(body)
+            self.response['message_signature_bytes'] = res
 
-        return fmt
+        # Body
+        res, body = self.packet_reader.read_string(body)
+        self.response['message'] = res
+
+        res, body = self.packet_reader.read_long(body)
+        self.response['timestamp'] = res
+
+        res, body = self.packet_reader.read_long(body)
+        self.response['salt'] = res
+
+        # Previous Messages
+        res, body = self.packet_reader.read_varint(body)
+        self.response['total_previous_messages'] = res
+
+        res, body = self.packet_reader.read_varint(body)
+        self.response['message_id'] = res
+
+        # TODO: handle
+        if(self.response['message_signature_present']):
+            res, body = self.packet_reader.read_boolean(body)
+            self.response['signature'] = res
+
+        # Other
+        res, body = self.packet_reader.read_boolean(body)
+        self.response['unsigned_content_present'] = res
+
+        # TODO: handle
+        if(self.response['unsigned_content_present']):
+            res, body = self.packet_reader.read_boolean(body)
+            self.response['unsigned_content'] = res
+
+        res, body = self.packet_reader.read_varint(body)
+        self.response['filter_type'] = res
+
+        # TODO: handle
+        if(self.response['filter_type'] == 2):
+            res, body = self.packet_reader.read_boolean(body)
+            self.response['filter_type_bits'] = res
+
+        # Chat Formatting
+        res, body = self.packet_reader.read_varint(body)
+        self.response['chat_type'] = res
+
+        res, body = self.packet_reader.read_chat(body)
+        self.response['sender_name'] = res
+
+        res, body = self.packet_reader.read_boolean(body)
+        self.response['has_target_name'] = res
+
+        if(self.response['has_target_name']):
+            res, body = self.packet_reader.read_chat(body)
+            self.response['target_name'] = res
 
     @property
     def sender(self) -> UUID:
-        return self.response[0]
+        return self.response['sender']
+
+    @property
+    def index(self) -> Varint:
+        return self.response['index']
+
+    @property
+    def message(self) -> str:
+        return self.response['message']
+
+    @property
+    def timestamp(self) -> int:
+        return self.response['timestamp']
+

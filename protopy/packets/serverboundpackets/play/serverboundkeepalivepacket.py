@@ -1,4 +1,4 @@
-from protopy.datatypes.buffer import Buffer
+from protopy.packets.buffer import Buffer
 from protopy.packets.serverboundpackets import ServerBoundPacket
 from protopy.packets.packet import PacketDirection, PacketMode
 
@@ -14,7 +14,7 @@ class ServerboundKeepAlivePacket(ServerBoundPacket):
 
     def _write(self):
         buffer = Buffer()
-        buffer.write(self.keep_alive_id)
+        buffer.write_long(self.keep_alive_id)
 
         return buffer
 

@@ -9,71 +9,69 @@ from protopy.utils import logger
 
 class TcpClient:
     def __init__(self, host: str, port: int, buffer_size: int = 2097151) -> None:
-        self.packets_listeners = []
-        self.is_connected = False
-
         self.host = host
         self.port = port
         self.buffer_size = buffer_size
 
+        self.packets_listeners = []
+        self.is_connected = False
         self.compression = False
         self.threshold = 0
 
-        self.stream = b''
-
-        self.mode = PacketMode.HANDSHAKING
-
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._stream = b''
+        self._mode = PacketMode.HANDSHAKING
+        self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def connect(self) -> None:
         try:
-            self.socket.connect((self.host, self.port))
+            self._socket.connect((self.host, self.port))
             self.is_connected = True
-            Thread(target=lambda: self.listen()).start()
-            Thread(target=lambda: self.split_packets()).start()
+            Thread(target=lambda: self._listen()).start()
+            Thread(target=lambda: self._split_packets()).start()
         except ConnectionRefusedError:
-            raise ConnectionError("Server is not online")
+            logger.warning("Server is not online")
+            exit()
 
     def close(self) -> None:
         self.is_connected = False
-        self.socket.close()
+        self._socket.close()
 
     def sendPacket(self, packet: Packet) -> None:
-        self.mode = packet.NEXT_MODE
+        self._mode = packet.NEXT_MODE
         packet.is_compressed = self.compression
         raw_data = packet.packet()
-        self.socket.sendall(raw_data)
+        self._socket.sendall(raw_data)
 
-    def receive(self) -> bytes:
-        return self.socket.recv(self.buffer_size)
+    def _receive(self) -> bytes:
+        return self._socket.recv(self.buffer_size)
 
-    def packets_handler(self, packet: Packet):
+    def _packets_handler(self, packet: Packet):
         # Set connection mode
         if(not isinstance(packet, UnknowPacket)):
-            self.mode = packet.NEXT_MODE
+            self._mode = packet.NEXT_MODE
 
         # Call listeners
         self.call_packet_listeners(packet)
 
-    def split_packets(self):
+    def _split_packets(self):
         while self.is_connected:
-            if self.stream != b'':
-                lenght, self.stream = Varint.unpack(self.stream)
+            if self._stream != b'':
+                lenght, self._stream = Varint.unpack(self._stream)
 
-                raw_data = Varint.pack(lenght) + self.stream[:lenght]
+                raw_data = Varint.pack(lenght) + self._stream[:lenght]
 
                 # Build received packet
                 packet_reader = PacketReader(compression=self.compression)
-                packet = packet_reader.build_packet_from_raw_data(raw_data, self.mode, self.compression)
+                packet = packet_reader.build_packet_from_raw_data(raw_data, self._mode, self.compression)
 
                 # Handle packet
-                self.packets_handler(packet)
-                self.stream = self.stream[lenght:]
+                self._packets_handler(packet)
+                self._stream = self._stream[lenght:]
 
-    def listen(self) -> None:
+    def _listen(self) -> None:
         while self.is_connected:
-            if data := self.receive():
-                self.stream += data
+            if data := self._receive():
+                self._stream += data
             else:
                 if self.is_connected:
                     self.is_connected = False

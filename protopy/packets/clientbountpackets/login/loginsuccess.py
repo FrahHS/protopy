@@ -12,11 +12,24 @@ class LoginSuccessPacket(ClientBoundPacket):
     def __init__(self, raw_data: bytes, is_compressed: bool = False) -> None:
         super().__init__(raw_data, is_compressed)
     
-    def _fmt(self):
-        fmt = [
-            DataTypes.UUID,
-            DataTypes.STRING,
-            DataTypes.VARINT
-        ]
+    def _read(self, body):
+        res, body = self.packet_reader.read_uuid(body)
+        self.response['uuid'] = res
 
-        return fmt
+        res, body = self.packet_reader.read_string(body)
+        self.response['username'] = res
+
+        res, body = self.packet_reader.read_string(body)
+        self.response['number_of_proprieties'] = res
+
+    @property
+    def uuid(self):
+        return self.response['uuid']
+
+    @property
+    def username(self):
+        return self.response['username']
+
+    @property
+    def number_of_proprieties(self):
+        return self.response['number_of_proprieties']

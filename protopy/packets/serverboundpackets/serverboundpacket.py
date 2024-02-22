@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from protopy.packets import Packet
-from protopy.datatypes.buffer import Buffer
+from protopy.packets.buffer import Buffer
 
 class ServerBoundPacket(Packet, ABC):
     def __init__(self, is_compressed) -> None:
