@@ -8,7 +8,7 @@ from protopy.packets.clientbountpackets import SetCompressionPacket
 from protopy.utils import logger
 
 class TcpClient:
-    def __init__(self, host: str, port: int, buffer_size: int = 2097151) -> None:
+    def __init__(self, host: str, port: int, buffer_size: int = 1024) -> None:
         self.host = host
         self.port = port
         self.buffer_size = buffer_size
@@ -56,17 +56,18 @@ class TcpClient:
     def _split_packets(self):
         while self.is_connected:
             if self._stream != b'':
-                lenght, self._stream = Varint.unpack(self._stream)
+                lenght, body = Varint.unpack(self._stream)
+                if len(body) >= lenght:
+                    self._stream = body
+                    raw_data = Varint.pack(lenght) + self._stream[:lenght]
 
-                raw_data = Varint.pack(lenght) + self._stream[:lenght]
+                    # Build received packet
+                    packet_reader = PacketReader(compression=self.compression)
+                    packet = packet_reader.build_packet_from_raw_data(raw_data, self._mode, self.compression)
 
-                # Build received packet
-                packet_reader = PacketReader(compression=self.compression)
-                packet = packet_reader.build_packet_from_raw_data(raw_data, self._mode, self.compression)
-
-                # Handle packet
-                self._packets_handler(packet)
-                self._stream = self._stream[lenght:]
+                    # Handle packet
+                    self._packets_handler(packet)
+                    self._stream = self._stream[lenght:]
 
     def _listen(self) -> None:
         while self.is_connected:

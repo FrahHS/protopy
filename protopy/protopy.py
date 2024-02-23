@@ -12,7 +12,7 @@ from protopy.packets.clientbountpackets import LoginSuccessPacket, SetCompressio
 from protopy.packets.serverboundpackets import HandshakePacket, LoginAcknowledged, LoginStartPacket,ServerboundKeepAlivePacket
 
 class ProtoPY(TcpClient):
-    def __init__(self, host: str, port: int, protocol_version: int, buffer_size: int = 2097151) -> None:
+    def __init__(self, host: str, port: int, protocol_version: int, buffer_size: int = 1024) -> None:
         super().__init__(host, port, buffer_size)
         self.protocol_version = protocol_version
         self.connect()
