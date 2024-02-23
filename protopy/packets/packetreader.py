@@ -72,7 +72,7 @@ class PacketReader:
         return (string[:lenght].decode(), data[lenght+1:])
 
     def read_chat(self, data: bytes) -> None:
-        data = b'\n\x00\x04chat' + data
+        data = b'\n\x00\x07content' + data
         file = io.BytesIO(gzip.compress(data))
         nbtfile = NBTFile(fileobj=file)
 

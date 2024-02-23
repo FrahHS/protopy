@@ -1,5 +1,6 @@
 import socket
 from threading import Thread
+import time
 from protopy.datatypes.varint import Varint
 
 from protopy.packets.packetreader import PacketReader
@@ -75,8 +76,9 @@ class TcpClient:
                 self._stream += data
             else:
                 if self.is_connected:
-                    self.is_connected = False
                     logger.info("Connection Lost.")
+                    time.sleep(1)
+                    self.is_connected = False
 
     def listener(self):
         def inner(func):
