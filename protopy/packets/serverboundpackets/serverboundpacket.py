@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import zlib
-from protopy.datatypes.varint import Varint
 
+from protopy.datatypes.varint import Varint
 from protopy.packets import Packet
 from protopy.packets.buffer import Buffer
 from protopy.packets.packet import PacketDirection, PacketMode

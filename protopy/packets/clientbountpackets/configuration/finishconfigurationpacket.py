@@ -1,7 +1,5 @@
-from protopy.datatypes.datatypes import DataTypes
 from protopy.packets.clientbountpackets import ClientBoundPacket
-from protopy.packets.packet import PacketDirection, PacketMode
-from protopy.packets.packetreader import PacketReader
+from protopy.packets.packet import PacketMode
 
 class ClientBoundFinishConfigurationPacket(ClientBoundPacket):
     packet_id = b'\x02'

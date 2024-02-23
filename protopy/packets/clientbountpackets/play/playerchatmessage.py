@@ -1,10 +1,7 @@
 from uuid import UUID
-from protopy.datatypes.datatypes import DataTypes
-from protopy.datatypes.varint import Varint
+
 from protopy.packets.clientbountpackets import ClientBoundPacket
-from protopy.packets.packet import PacketDirection, PacketMode
-from protopy.packets.packetreader import PacketReader
-from protopy.utils import logger
+from protopy.packets.packet import PacketMode
 
 class PlayerChatMessagePacket(ClientBoundPacket):
     packet_id = b'\x37'

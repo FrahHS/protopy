@@ -1,10 +1,9 @@
-import uuid, time
+import time
 
 from protopy import ProtoPY
 from protopy.datatypes.bitset import BitSet
 
 from protopy.packets.clientbountpackets import PlayerChatMessagePacket, ClientBoundFinishConfigurationPacket
-from protopy.packets.packet import UnknowPacket
 from protopy.packets.serverboundpackets import ChatMessagePacket
 
 host = 'localhost'
@@ -14,15 +13,10 @@ client = ProtoPY(host=host, port=port, protocol_version=765)
 
 client.login('XSteve')
 
-@client.listener(UnknowPacket)
-def l(packet: UnknowPacket):
-    print(packet.packet_id)
-
 @client.listener(PlayerChatMessagePacket)
 def l(packet: PlayerChatMessagePacket):
     if(packet.sender_name != 'XSteve'):
         print(f'{packet.sender_name}: {packet.message}')
-
 
 @client.listener(ClientBoundFinishConfigurationPacket)
 def l(packet: ClientBoundFinishConfigurationPacket):

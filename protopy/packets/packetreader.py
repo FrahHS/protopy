@@ -1,8 +1,9 @@
 import struct, uuid, zlib, io, gzip
-from nbt.nbt import NBTFile
+from nbt.nbt import NBTFile, MalformedFileError
 
 from protopy.datatypes.varint import Varint
 from protopy.packets.packet import Packet, PacketDirection, PacketMode, UnknowPacket
+from protopy.utils import logger
 
 class PacketReader:
     """
@@ -23,7 +24,7 @@ class PacketReader:
         """
         self.compression = compression
 
-    def get_packet_id_and_data(self, raw_data: bytes) -> Varint:
+    def get_packet_id_and_data(self, raw_data: bytes) -> tuple[Varint, bytes]:
         """
         Gets the packet ID and body data from the raw data.
 
@@ -68,7 +69,7 @@ class PacketReader:
 
         return Packet.all_packets[new_packet](raw_data, is_compressed)
 
-    def read_boolean(self, data: bool) ->  tuple:
+    def read_boolean(self, data: bool) ->  tuple[bool, bytes]:
         """
         Reads a boolean value from the data.
 
@@ -84,7 +85,7 @@ class PacketReader:
         return (res, data[1:])
 
     # TODO: Implement these methods
-    def read_byte(self, data: bytes) ->  tuple:
+    def read_byte(self, data: bytes) ->  tuple[bytes, bytes]:
         pass
 
     def read_unsigned_byte(self, data: bytes) ->  tuple:
@@ -99,7 +100,7 @@ class PacketReader:
     def read_int(self, data: int) ->  tuple:
         pass
 
-    def read_long(self, data: int) -> tuple:
+    def read_long(self, data: int) -> tuple[int, bytes]:
         """
         Reads a long integer value from the data.
 
@@ -120,7 +121,7 @@ class PacketReader:
     def read_double(self, data: float) ->  tuple:
         pass
 
-    def read_string(self, data: str) -> tuple:
+    def read_string(self, data: str) -> tuple[str, bytes]:
         """
         Reads a string from the data.
 
@@ -135,7 +136,7 @@ class PacketReader:
         lenght, string = Varint.unpack(data)
         return (string[:lenght].decode(), data[lenght+1:])
 
-    def read_chat(self, data: bytes) -> tuple:
+    def read_chat(self, data: bytes) -> tuple[NBTFile, bytes]:
         """
         Reads chat data from the data.
 
@@ -156,7 +157,8 @@ class PacketReader:
             nbtfile.write_file(fileobj=buffer)
             data = data[len(gzip.decompress(buffer.getvalue())):]
             return (nbtfile, data)
-        except:
+        except MalformedFileError as e:
+            logger.warning(f'NBTFile parsing error {e}\nraw data:\n{data}')
             return (data, data)
 
     # TODO: Implement these methods
@@ -166,7 +168,7 @@ class PacketReader:
     def read_identifier(self, data: str) ->  tuple:
         pass
 
-    def read_varint(self, data: Varint) -> tuple:
+    def read_varint(self, data: Varint) -> tuple[Varint, bytes]:
         """
         Reads a varint value from the data.
 
@@ -200,7 +202,7 @@ class PacketReader:
     def read_angle(self, data: int) ->  tuple:
         pass
 
-    def read_uuid(self, data: uuid.UUID) -> tuple:
+    def read_uuid(self, data: uuid.UUID) -> tuple[uuid.UUID, bytes]:
         """
         Reads a UUID from the data.
 
@@ -225,7 +227,7 @@ class PacketReader:
     def read_x_enum(self, data: int) ->  tuple:
         pass
 
-    def read_byte_array(self, data: bytearray, lenght: int) -> tuple:
+    def read_byte_array(self, data: bytearray, lenght: int) -> tuple[bytes, bytes]:
         """
         Reads a byte array from the data.
 
