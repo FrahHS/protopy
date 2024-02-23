@@ -1,5 +1,4 @@
 import struct
-import time
 from uuid import UUID
 
 from protopy.datatypes.varint import Varint

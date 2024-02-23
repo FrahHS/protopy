@@ -1,7 +1,4 @@
-from uuid import UUID
-
 from protopy.client.tcpclient import TcpClient
-from protopy.datatypes.varint import Varint
 from protopy.utils import logger
 from protopy.utils.getuuid import get_uuid
 
