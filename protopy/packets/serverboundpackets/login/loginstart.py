@@ -5,13 +5,14 @@ from protopy.packets.serverboundpackets import ServerBoundPacket
 from protopy.packets.packet import PacketDirection, PacketMode
 
 class LoginStartPacket(ServerBoundPacket):
-    PACKET_ID = b'\x00'
-    DIRECTION = PacketDirection.SERVER
-    MODE = PacketMode.LOGIN
-    NEXT_MODE = PacketMode.LOGIN
+    packet_id = b'\x00'
+    mode = PacketMode.LOGIN
 
     def __init__(self, name: str, player_uuid: UUID, is_compressed: bool = False) -> None:
-        super().__init__(is_compressed)
+        super().__init__(
+            is_compressed = is_compressed,
+        )
+
         self.name = name
         self.player_uuid = player_uuid
 

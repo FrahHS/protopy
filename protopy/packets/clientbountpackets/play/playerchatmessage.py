@@ -7,13 +7,14 @@ from protopy.packets.packetreader import PacketReader
 from protopy.utils import logger
 
 class PlayerChatMessagePacket(ClientBoundPacket):
-    PACKET_ID = b'\x37'
-    DIRECTION = PacketDirection.CLIENT
-    MODE = PacketMode.PLAY
-    NEXT_MODE = PacketMode.PLAY
+    packet_id = b'\x37'
+    mode = PacketMode.PLAY
 
     def __init__(self, raw_data: bytes, is_compressed: bool = False) -> None:
-        super().__init__(raw_data, is_compressed)
+        super().__init__(
+            raw_data = raw_data,
+            is_compressed = is_compressed,
+        )
 
     def _read(self, body):
         # Header

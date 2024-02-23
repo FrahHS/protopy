@@ -38,7 +38,7 @@ class TcpClient:
         self._socket.close()
 
     def sendPacket(self, packet: Packet) -> None:
-        self._mode = packet.NEXT_MODE
+        self._mode = packet.next_mode
         packet.is_compressed = self.compression
         raw_data = packet.packet()
         self._socket.sendall(raw_data)
@@ -49,7 +49,7 @@ class TcpClient:
     def _packets_handler(self, packet: Packet):
         # Set connection mode
         if(not isinstance(packet, UnknowPacket)):
-            self._mode = packet.NEXT_MODE
+            self._mode = packet.next_mode
 
         # Call listeners
         self.call_packet_listeners(packet)

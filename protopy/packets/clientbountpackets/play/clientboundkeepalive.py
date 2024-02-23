@@ -3,13 +3,14 @@ from protopy.packets.clientbountpackets import ClientBoundPacket
 from protopy.packets.packet import PacketDirection, PacketMode
 
 class ClientboundKeepAlivePacket(ClientBoundPacket):
-    PACKET_ID = b'\x24'
-    DIRECTION = PacketDirection.CLIENT
-    MODE = PacketMode.PLAY
-    NEXT_MODE = PacketMode.PLAY
+    packet_id = b'\x24'
+    mode = PacketMode.PLAY
 
     def __init__(self, raw_data: bytes, is_compressed: bool = False) -> None:
-        super().__init__(raw_data, is_compressed)
+        super().__init__(
+            raw_data = raw_data,
+            is_compressed = is_compressed,
+        )
 
     def _read(self, body):
         res, body = self.packet_reader.read_long(body)

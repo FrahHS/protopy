@@ -3,6 +3,7 @@ from uuid import UUID
 from protopy.client.tcpclient import TcpClient
 from protopy.datatypes.varint import Varint
 from protopy.utils import logger
+from protopy.utils.getuuid import get_uuid
 
 from protopy.packets.clientbountpackets import LoginSuccessPacket, SetCompressionPacket, ClientboundKeepAlivePacket, DisconnectPlayPacket, ClientBoundFinishConfigurationPacket
 from protopy.packets.serverboundpackets import HandshakePacket, LoginAcknowledged, LoginStartPacket,ServerboundKeepAlivePacket, ServerBoundFinishConfigurationPacket
@@ -26,7 +27,7 @@ class ProtoPY(TcpClient):
 
         super()._packets_handler(packet)
 
-    def login(self, username: str, uuid: UUID):
+    def login(self, username: str):
         # Handshake
         next_state = 2
 
@@ -40,7 +41,7 @@ class ProtoPY(TcpClient):
         # Login Start
         login_start_packet = LoginStartPacket(
             name=username,
-            player_uuid=uuid,
+            player_uuid=get_uuid(username),
         )
 
         self.sendPacket(handshake_packet)
