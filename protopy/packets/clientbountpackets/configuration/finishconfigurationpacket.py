@@ -3,7 +3,7 @@ from protopy.packets.clientbountpackets import ClientBoundPacket
 from protopy.packets.packet import PacketDirection, PacketMode
 from protopy.packets.packetreader import PacketReader
 
-class FinishConfigurationPacket(ClientBoundPacket):
+class ClientBoundFinishConfigurationPacket(ClientBoundPacket):
     PACKET_ID = b'\x02'
     DIRECTION = PacketDirection.CLIENT
     MODE = PacketMode.CONFIGURATION

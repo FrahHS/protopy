@@ -2,7 +2,7 @@ from protopy.packets.buffer import Buffer
 from protopy.packets.serverboundpackets import ServerBoundPacket
 from protopy.packets.packet import PacketDirection, PacketMode
 
-class FinishConfigurationPacket(ServerBoundPacket):
+class ServerBoundFinishConfigurationPacket(ServerBoundPacket):
     PACKET_ID = b'\x02'
     DIRECTION = PacketDirection.SERVER
     MODE = PacketMode.CONFIGURATION

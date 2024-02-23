@@ -10,7 +10,7 @@ from protopy.packets.clientbountpackets.login.loginsuccess import LoginSuccessPa
 from protopy.packets.clientbountpackets.login.setcompression import SetCompressionPacket
 
 # Configuration
-from protopy.packets.clientbountpackets.configuration.finishconfigurationpacket import FinishConfigurationPacket
+from protopy.packets.clientbountpackets.configuration.finishconfigurationpacket import ClientBoundFinishConfigurationPacket
 
 # Play
 from protopy.packets.clientbountpackets.play.clientboundkeepalive import ClientboundKeepAlivePacket
