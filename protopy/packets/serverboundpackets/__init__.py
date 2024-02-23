@@ -17,3 +17,4 @@ from protopy.packets.serverboundpackets.configuration.finishconfigurationpacket 
 
 # Play
 from protopy.packets.serverboundpackets.play.serverboundkeepalivepacket import ServerboundKeepAlivePacket
+from protopy.packets.serverboundpackets.play.chatmessage import ChatMessagePacket

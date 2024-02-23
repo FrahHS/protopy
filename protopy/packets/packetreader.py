@@ -1,12 +1,8 @@
-import io
-import json, gzip
-import struct, uuid, zlib
-import nbtlib
+import struct, uuid, zlib, io, gzip
+from nbt.nbt import NBTFile
 
 from protopy.datatypes.varint import Varint
-from protopy.datatypes.datatypes import DataTypes
 from protopy.packets.packet import Packet, PacketDirection, PacketMode, UnknowPacket
-from protopy.utils import logger
 
 class PacketReader:
     all_packets = {}
@@ -16,18 +12,18 @@ class PacketReader:
 
     def get_packet_id_and_data(self, raw_data: bytes) -> Varint:
         if(self.compression):
-            packet_length, body = Varint.unpack(raw_data)
+            body = Varint.unpack(raw_data)[1]
             data_length, body = Varint.unpack(body)
             body = zlib.decompress(body) if data_length != 0 else body
             packet_id, body = Varint.unpack(body)
         else:
-            packet_length, body = Varint.unpack(raw_data)
+            body = Varint.unpack(raw_data)[1]
             packet_id, body = Varint.unpack(body)
 
         return Varint(packet_id), body
 
     def build_packet_from_raw_data(self, raw_data: bytes, mode: PacketMode, is_compressed: bool = False):
-        packet_id, payload = self.get_packet_id_and_data(raw_data)
+        packet_id = self.get_packet_id_and_data(raw_data)[0]
         new_packet = (packet_id.bytes, PacketDirection.CLIENT, mode,)
 
         if(not Packet.all_packets.keys().__contains__(new_packet)):
@@ -75,19 +71,18 @@ class PacketReader:
         lenght, string = Varint.unpack(data)
         return (string[:lenght].decode(), data[lenght+1:])
 
-    #TODO: fix, is not reading full NBT Tag
     def read_chat(self, data: bytes) -> None:
-        file = io.BytesIO((data))
-        nbt_file = nbtlib.File.parse(fileobj=file)
+        try:
+            data = b'\n\x00\x07content' + data
+            file = io.BytesIO(gzip.compress(data))
+            nbtfile = NBTFile(fileobj=file)
 
-        # A very unelegant way to fint nbt tag lenght in bytes
-        file_for_lenght = io.BytesIO(b'')
-        nbt_file.write(fileobj=file_for_lenght)
-        file_for_lenght.seek(0)
-        lenght = len(file_for_lenght.read())
-        data = data[lenght+1:]
-
-        return (nbt_file, data)
+            buffer = io.BytesIO()
+            nbtfile.write_file(fileobj=buffer)
+            data = data[len(gzip.decompress(buffer.getvalue())):]
+            return (nbtfile, data)
+        except:
+            return (data, data)
 
     #TODO
     def read_json_chat(self, data: str) -> None:
@@ -141,6 +136,5 @@ class PacketReader:
     def read_x_enum(self, data: int) -> None:
         pass
 
-    #TODO
-    def read_byte_array(self, data: bytearray) -> None:
-        pass
+    def read_byte_array(self, data: bytearray, lenght: int) -> None:
+        return(data[:lenght], data[lenght:])

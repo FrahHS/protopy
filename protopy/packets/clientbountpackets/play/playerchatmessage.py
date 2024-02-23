@@ -26,9 +26,8 @@ class PlayerChatMessagePacket(ClientBoundPacket):
         res, body = self.packet_reader.read_boolean(body)
         self.response['message_signature_present'] = res
 
-        # TODO: handle
         if(self.response['message_signature_present']):
-            res, body = self.packet_reader.read_boolean(body)
+            res, body = self.packet_reader.read_byte_array(body, lenght=256)
             self.response['message_signature_bytes'] = res
 
         # Body
@@ -57,9 +56,8 @@ class PlayerChatMessagePacket(ClientBoundPacket):
         res, body = self.packet_reader.read_boolean(body)
         self.response['unsigned_content_present'] = res
 
-        # TODO: handle
         if(self.response['unsigned_content_present']):
-            res, body = self.packet_reader.read_boolean(body)
+            res, body = self.packet_reader.read_chat(body)
             self.response['unsigned_content'] = res
 
         res, body = self.packet_reader.read_varint(body)
@@ -89,7 +87,7 @@ class PlayerChatMessagePacket(ClientBoundPacket):
         return self.response['sender']
 
     @property
-    def index(self) -> Varint:
+    def index(self) -> bytes:
         return self.response['index']
 
     @property
@@ -100,3 +98,9 @@ class PlayerChatMessagePacket(ClientBoundPacket):
     def timestamp(self) -> int:
         return self.response['timestamp']
 
+    @property
+    def sender_name(self) -> str:
+        try:
+            return str(self.response['sender_name']['text'])
+        except:
+            return ""

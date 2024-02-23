@@ -15,3 +15,4 @@ from protopy.packets.clientbountpackets.configuration.finishconfigurationpacket 
 # Play
 from protopy.packets.clientbountpackets.play.clientboundkeepalive import ClientboundKeepAlivePacket
 from protopy.packets.clientbountpackets.play.playerchatmessage import PlayerChatMessagePacket
+from protopy.packets.clientbountpackets.play.disconnectplay import DisconnectPlayPacket
