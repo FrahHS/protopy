@@ -1,15 +1,16 @@
 from protopy.packets.buffer import Buffer
 from protopy.packets.serverboundpackets import ServerBoundPacket
-from protopy.packets.packet import PacketDirection, PacketMode
+from protopy.packets.packet import PacketMode
 
-class FinishConfigurationPacket(ServerBoundPacket):
-    PACKET_ID = b'\x02'
-    DIRECTION = PacketDirection.SERVER
-    MODE = PacketMode.CONFIGURATION
-    NEXT_MODE = PacketMode.PLAY
+class ServerBoundFinishConfigurationPacket(ServerBoundPacket):
+    packet_id = b'\x02'
+    mode = PacketMode.CONFIGURATION
+    next_mode= PacketMode.PLAY
 
     def __init__(self, is_compressed: bool = False) -> None:
-        super().__init__(is_compressed)
+        super().__init__(
+            is_compressed = is_compressed,
+        )
 
     def _write(self):
         buffer = Buffer()

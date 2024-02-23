@@ -1,15 +1,16 @@
 from protopy.packets.buffer import Buffer
 from protopy.packets.serverboundpackets import ServerBoundPacket
-from protopy.packets.packet import PacketDirection, PacketMode
+from protopy.packets.packet import PacketMode
 
 class HandshakePacket(ServerBoundPacket):
-    PACKET_ID = b'\x00'
-    DIRECTION = PacketDirection.SERVER
-    MODE = PacketMode.HANDSHAKING
-    NEXT_MODE = PacketMode.HANDSHAKING
+    packet_id = b'\x00'
+    mode = PacketMode.HANDSHAKING
 
     def __init__(self, protocol_version: int, server_address: str, server_port: int, next_state: int, is_compressed: bool = False) -> None:
-        super().__init__(is_compressed)
+        super().__init__(
+            is_compressed = is_compressed,
+        )
+
         self.protocol_version = protocol_version
         self.server_address = server_address
         self.server_port = server_port

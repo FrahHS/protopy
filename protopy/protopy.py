@@ -1,15 +1,9 @@
-from uuid import UUID
-import zlib
-
 from protopy.client.tcpclient import TcpClient
-from protopy.datatypes.varint import Varint
-
 from protopy.utils import logger
+from protopy.utils.getuuid import get_uuid
 
-from protopy.packets import clientbountpackets
-from protopy.packets import serverboundpackets
-from protopy.packets.clientbountpackets import LoginSuccessPacket, SetCompressionPacket, ClientboundKeepAlivePacket, DisconnectPlayPacket
-from protopy.packets.serverboundpackets import HandshakePacket, LoginAcknowledged, LoginStartPacket,ServerboundKeepAlivePacket
+from protopy.packets.clientbountpackets import LoginSuccessPacket, SetCompressionPacket, ClientboundKeepAlivePacket, DisconnectPlayPacket, ClientBoundFinishConfigurationPacket
+from protopy.packets.serverboundpackets import HandshakePacket, LoginAcknowledged, LoginStartPacket,ServerboundKeepAlivePacket, ServerBoundFinishConfigurationPacket
 
 class ProtoPY(TcpClient):
     def __init__(self, host: str, port: int, protocol_version: int, buffer_size: int = 1024) -> None:
@@ -30,7 +24,7 @@ class ProtoPY(TcpClient):
 
         super()._packets_handler(packet)
 
-    def login(self, username: str, uuid: UUID):
+    def login(self, username: str):
         # Handshake
         next_state = 2
 
@@ -44,7 +38,7 @@ class ProtoPY(TcpClient):
         # Login Start
         login_start_packet = LoginStartPacket(
             name=username,
-            player_uuid=uuid,
+            player_uuid=get_uuid(username),
         )
 
         self.sendPacket(handshake_packet)
@@ -57,11 +51,12 @@ class ProtoPY(TcpClient):
             if(isinstance(packet, LoginSuccessPacket)):
                 self.sendPacket(LoginAcknowledged())
 
-            if(isinstance(packet, clientbountpackets.FinishConfigurationPacket)):
-                self.sendPacket(serverboundpackets.FinishConfigurationPacket())
+            if(isinstance(packet, ClientBoundFinishConfigurationPacket)):
+                self.sendPacket(ServerBoundFinishConfigurationPacket())
                 logger.info('Logged in')
 
             if(isinstance(packet, DisconnectPlayPacket)):
                 logger.info(f'Disconnected: {packet.reason}')
 
-        self.packets_listeners.insert(0, _listener)
+        #self.packets_listeners.insert(0, _listener)
+        self.add_listener(None, _listener)

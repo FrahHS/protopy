@@ -1,7 +1,6 @@
 from enum import Enum
 from abc import ABC, abstractmethod
 
-from protopy.packets.buffer import Buffer
 from protopy.datatypes.varint import Varint
 
 class PacketDirection(Enum):
@@ -16,16 +15,44 @@ class PacketMode(Enum):
     PLAY = 5
 
 class Packet(ABC):
-    def __init__(self, is_compressed) -> None:
+    all_packets = {}
+
+    def __init__(self, raw_data: bytes, is_compressed: bool) -> None:
+        self.raw_data = raw_data
         self.is_compressed = is_compressed
+
 
     @staticmethod
     def data_pack(data: bytes) -> bytes:
         return Varint.data_pack(data)
 
+    @staticmethod
+    @property
+    @abstractmethod
+    def packet_id() -> bytes:
+        pass
+
+    @staticmethod
+    @property
+    @abstractmethod
+    def mode() -> PacketMode:
+        pass
+
+    @staticmethod
+    @property
+    @abstractmethod
+    def direction() -> PacketMode:
+        pass
+
+    @property
+    def next_mode(self) -> PacketMode:
+        return self.mode
+
 class UnknowPacket:
-    def __init__(self, packet_id: Varint, mode: PacketMode, direction: PacketDirection, raw_data: bytes) -> None:
-        self.PACKET_ID = packet_id.bytes
-        self.MODE = mode,
-        self.DIRECTION = direction
+    def __init__(self, packet_id: bytes, mode: PacketMode, direction: PacketDirection, raw_data: bytes, is_compressed: bool) -> None:
         self.raw_data = raw_data
+        self.is_compressed = is_compressed
+        self.packet_id = packet_id
+        self.mode = mode
+        self.direction = direction
+

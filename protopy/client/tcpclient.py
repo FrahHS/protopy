@@ -38,7 +38,7 @@ class TcpClient:
         self._socket.close()
 
     def sendPacket(self, packet: Packet) -> None:
-        self._mode = packet.NEXT_MODE
+        self._mode = packet.next_mode
         packet.is_compressed = self.compression
         raw_data = packet.packet()
         self._socket.sendall(raw_data)
@@ -49,7 +49,7 @@ class TcpClient:
     def _packets_handler(self, packet: Packet):
         # Set connection mode
         if(not isinstance(packet, UnknowPacket)):
-            self._mode = packet.NEXT_MODE
+            self._mode = packet.next_mode
 
         # Call listeners
         self.call_packet_listeners(packet)
@@ -81,18 +81,24 @@ class TcpClient:
                     self.is_connected = False
                     exit()
 
-    def listener(self):
+    def listener(self, packet_class = None):
         def inner(func):
-            self.add_listener(func)
+            self.add_listener(packet_class, func)
             return func
         return inner
 
-    def add_listener(self, func):
-        self.packets_listeners.append(func)
+    def add_listener(self, packet_class, func):
+        self.packets_listeners.append(
+            {"callback":func, "class": packet_class}
+        )
 
-    def dispose_listener(self, func):
-        self.packets_listeners.remove(func)
+    """def dispose_listener(self, func):
+        self.packets_listeners.remove(func)"""
 
-    def call_packet_listeners(self, packet):
-        for func in self.packets_listeners:
-            func(packet)
+    def call_packet_listeners(self, packet: object):
+        for cur_listener in self.packets_listeners:
+            if isinstance(cur_listener, dict):
+                if cur_listener["class"] == packet.__class__:
+                    cur_listener["callback"](packet)
+                if cur_listener["class"] == None:
+                    cur_listener["callback"](packet)

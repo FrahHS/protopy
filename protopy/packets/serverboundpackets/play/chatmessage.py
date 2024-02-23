@@ -1,18 +1,18 @@
-from protopy.datatypes.varint import Varint
 from protopy.packets.buffer import Buffer
 from protopy.packets.serverboundpackets import ServerBoundPacket
-from protopy.packets.packet import PacketDirection, PacketMode
+from protopy.packets.packet import PacketMode
 
 from typing import Optional
 
 class ChatMessagePacket(ServerBoundPacket):
-    PACKET_ID = b'\x05'
-    DIRECTION = PacketDirection.SERVER
-    MODE = PacketMode.PLAY
-    NEXT_MODE = PacketMode.PLAY
+    packet_id = b'\x05'
+    mode = PacketMode.PLAY
 
     def __init__(self, message: str, timestamp: int, salt: int, has_signature: bool, message_count: int, acknowledged, signature: int = b'', is_compressed: bool = False) -> None:
-        super().__init__(is_compressed)
+        super().__init__(
+            is_compressed = is_compressed,
+        )
+
         self.message = message
         self.timestamp = timestamp
         self.salt = salt
