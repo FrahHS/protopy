@@ -12,7 +12,7 @@ class DisconnectPlayPacket(ClientBoundPacket):
         super().__init__(raw_data, is_compressed)
 
     def _read(self, body):
-        res, body = self.packet_reader.read_string(body[15:])
+        res = self.packet_reader.read_string(body[15:])[0]
         self.response['reason'] = res
 
     @property

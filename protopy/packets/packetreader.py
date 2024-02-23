@@ -72,15 +72,17 @@ class PacketReader:
         return (string[:lenght].decode(), data[lenght+1:])
 
     def read_chat(self, data: bytes) -> None:
-        data = b'\n\x00\x07content' + data
-        file = io.BytesIO(gzip.compress(data))
-        nbtfile = NBTFile(fileobj=file)
+        try:
+            data = b'\n\x00\x07content' + data
+            file = io.BytesIO(gzip.compress(data))
+            nbtfile = NBTFile(fileobj=file)
 
-        buffer = io.BytesIO()
-        nbtfile.write_file(fileobj=buffer)
-        data = data[len(gzip.decompress(buffer.getvalue())):]
-
-        return (nbtfile, data)
+            buffer = io.BytesIO()
+            nbtfile.write_file(fileobj=buffer)
+            data = data[len(gzip.decompress(buffer.getvalue())):]
+            return (nbtfile, data)
+        except:
+            return (data, data)
 
     #TODO
     def read_json_chat(self, data: str) -> None:

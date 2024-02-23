@@ -87,7 +87,7 @@ class PlayerChatMessagePacket(ClientBoundPacket):
         return self.response['sender']
 
     @property
-    def index(self) -> Varint:
+    def index(self) -> bytes:
         return self.response['index']
 
     @property
@@ -99,6 +99,8 @@ class PlayerChatMessagePacket(ClientBoundPacket):
         return self.response['timestamp']
 
     @property
-    def sender_name(self) -> int:
-        return self.response['sender_name']
-
+    def sender_name(self) -> str:
+        try:
+            return str(self.response['sender_name']['text'])
+        except:
+            return ""

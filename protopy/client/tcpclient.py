@@ -79,6 +79,7 @@ class TcpClient:
                     logger.info("Connection Lost.")
                     time.sleep(1)
                     self.is_connected = False
+                    exit()
 
     def listener(self):
         def inner(func):

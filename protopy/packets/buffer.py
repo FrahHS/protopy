@@ -64,7 +64,7 @@ class Buffer:
     def write_identifier(self, data: str) -> None:
         pass
 
-    def write_varint(self, data: Varint) -> None:
+    def write_varint(self, data: int) -> None:
         self.body += Varint(data).bytes
 
     #TODO: change when Varlong will be created
