@@ -19,4 +19,4 @@ class PingResponsePacket(ClientBoundPacket):
 
     @property
     def ping(self):
-        return round(time.time() * 1000) - self.response['keep_alive_id']
+        return round(time.time() * 1000) - self.response['ping']

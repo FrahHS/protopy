@@ -2,7 +2,7 @@ import time
 
 import pytest
 
-from protopy.client.tcpclient import Client
+from protopy.client.tcpclient import TcpClient
 from protopy.packets.clientbountpackets import StatusResponsePacket, PingResponsePacket
 from protopy.packets.serverboundpackets import HandshakePacket, StatusRequestPacket, PingRequestPacket
 
@@ -11,12 +11,13 @@ class TestClassDemoInstance:
         host = 'localhost'
         port = 25565
 
-        self.client = Client(host, port)
+        self.client = TcpClient(host=host, port=port)
         self.client.connect()
 
         # Handshake
         next_state = 1
         handshake_packet = HandshakePacket(
+            765,
             host,
             port,
             next_state
@@ -27,12 +28,11 @@ class TestClassDemoInstance:
     def test_ping(self):
         response = False
 
-        @self.client.listener()
-        def _l(packet):
+        @self.client.listener(PingResponsePacket)
+        def _l(packet: PingResponsePacket):
             nonlocal response
-            if isinstance(packet, PingResponsePacket):
-                assert isinstance(packet.ping, int)
-                response = True
+            assert isinstance(packet.ping, int)
+            response = True
 
         # Ping Request
         pingRequestPacket = PingRequestPacket()
@@ -55,13 +55,11 @@ class TestClassDemoInstance:
 
 
     def test_status(self):
-        @self.client.listener()
-        def _l(packet):
-            if(isinstance(packet, StatusResponsePacket)):
-                assert isinstance(packet, StatusResponsePacket)
-                print(packet.raw_data)
-                return
+        @self.client.listener(StatusResponsePacket)
+        def _l(packet: StatusResponsePacket):
+            print(packet.json_response)
+            return
 
         # Ping Request
-        pingRequestPacket = StatusRequestPacket()
-        self.client.sendPacket(pingRequestPacket)
+        statusRequestPacket = StatusRequestPacket()
+        self.client.sendPacket(statusRequestPacket)
