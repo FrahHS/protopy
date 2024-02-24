@@ -25,6 +25,21 @@ class ProtoPY(TcpClient):
         super()._packets_handler(packet)
 
     def login(self, username: str):
+        # Handle login and configuration
+        def _listener(packet):
+            if(isinstance(packet, LoginSuccessPacket)):
+                self.sendPacket(LoginAcknowledged())
+
+            if(isinstance(packet, ClientBoundFinishConfigurationPacket)):
+                self.sendPacket(ServerBoundFinishConfigurationPacket())
+                logger.info('Logged in')
+
+            if(isinstance(packet, DisconnectPlayPacket)):
+                logger.info(f'Disconnected: {packet.reason}')
+
+        #self.packets_listeners.insert(0, _listener)
+        self.add_listener(None, _listener)
+
         # Handshake
         next_state = 2
 
@@ -46,17 +61,3 @@ class ProtoPY(TcpClient):
         self.sendPacket(login_start_packet)
         logger.debug("login start...")
 
-        # Handle login and configuration
-        def _listener(packet):
-            if(isinstance(packet, LoginSuccessPacket)):
-                self.sendPacket(LoginAcknowledged())
-
-            if(isinstance(packet, ClientBoundFinishConfigurationPacket)):
-                self.sendPacket(ServerBoundFinishConfigurationPacket())
-                logger.info('Logged in')
-
-            if(isinstance(packet, DisconnectPlayPacket)):
-                logger.info(f'Disconnected: {packet.reason}')
-
-        #self.packets_listeners.insert(0, _listener)
-        self.add_listener(None, _listener)

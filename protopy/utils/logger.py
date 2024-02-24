@@ -21,7 +21,7 @@ class ColoredFormatter(logging.Formatter):
         return log_format
 
 logger = logging.getLogger('app')
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.DEBUG)

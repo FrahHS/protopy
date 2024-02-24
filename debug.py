@@ -1,3 +1,4 @@
+import logging
 import time
 
 from protopy import ProtoPY
@@ -5,6 +6,8 @@ from protopy.datatypes.bitset import BitSet
 
 from protopy.packets.clientbountpackets import PlayerChatMessagePacket, ClientBoundFinishConfigurationPacket
 from protopy.packets.serverboundpackets import ChatMessagePacket
+from protopy.utils import logger
+logger.setLevel(logging.DEBUG)
 
 host = 'localhost'
 port = 25565

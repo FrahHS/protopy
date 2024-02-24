@@ -1,3 +1,4 @@
+from inspect import signature
 import socket
 from threading import Thread
 import time
@@ -88,12 +89,17 @@ class TcpClient:
         return inner
 
     def add_listener(self, packet_class, func):
+        # Check if listener is valid
+        if(len(signature(func).parameters) != 1):
+            raise ListenerError(f'listeners must have 1 argument, {len(signature(func).parameters)} found: def {func.__name__}{signature(func)}:')
+
+        # Add listener
         self.packets_listeners.append(
             {"callback":func, "class": packet_class}
         )
 
-    """def dispose_listener(self, func):
-        self.packets_listeners.remove(func)"""
+    def dispose_listener(self, func):
+        self.packets_listeners.remove(func)
 
     def call_packet_listeners(self, packet: object):
         for cur_listener in self.packets_listeners:
@@ -102,3 +108,6 @@ class TcpClient:
                     cur_listener["callback"](packet)
                 if cur_listener["class"] == None:
                     cur_listener["callback"](packet)
+
+class ListenerError(Exception):
+    pass
