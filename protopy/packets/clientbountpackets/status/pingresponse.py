@@ -3,20 +3,21 @@ import time
 from protopy.packets.clientbountpackets import ClientBoundPacket
 from protopy.packets.packet import PacketMode
 
+
 class PingResponsePacket(ClientBoundPacket):
-    packet_id = b'\x01'
+    packet_id = b"\x01"
     mode = PacketMode.STATUS
 
     def __init__(self, raw_data: bytes, is_compressed: bool = False) -> None:
         super().__init__(
-            raw_data = raw_data,
-            is_compressed = is_compressed,
+            raw_data=raw_data,
+            is_compressed=is_compressed,
         )
 
     def _read(self, body):
         res, body = self.packet_reader.read_long(body)
-        self.response['ping'] = res
+        self.response["ping"] = res
 
     @property
     def ping(self):
-        return round(time.time() * 1000) - self.response['ping']
+        return round(time.time() * 1000) - self.response["ping"]

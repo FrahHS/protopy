@@ -1,7 +1,9 @@
 from protopy.packets.clientbountpackets.clientboundpacket import ClientBoundPacket
 
 # Status
-from protopy.packets.clientbountpackets.status.statusresponse import StatusResponsePacket
+from protopy.packets.clientbountpackets.status.statusresponse import (
+    StatusResponsePacket,
+)
 from protopy.packets.clientbountpackets.status.pingresponse import PingResponsePacket
 
 
@@ -10,9 +12,15 @@ from protopy.packets.clientbountpackets.login.loginsuccess import LoginSuccessPa
 from protopy.packets.clientbountpackets.login.setcompression import SetCompressionPacket
 
 # Configuration
-from protopy.packets.clientbountpackets.configuration.finishconfigurationpacket import ClientBoundFinishConfigurationPacket
+from protopy.packets.clientbountpackets.configuration.finishconfigurationpacket import (
+    ClientBoundFinishConfigurationPacket,
+)
 
 # Play
-from protopy.packets.clientbountpackets.play.clientboundkeepalive import ClientboundKeepAlivePacket
-from protopy.packets.clientbountpackets.play.playerchatmessage import PlayerChatMessagePacket
+from protopy.packets.clientbountpackets.play.clientboundkeepalive import (
+    ClientboundKeepAlivePacket,
+)
+from protopy.packets.clientbountpackets.play.playerchatmessage import (
+    PlayerChatMessagePacket,
+)
 from protopy.packets.clientbountpackets.play.disconnectplay import DisconnectPlayPacket

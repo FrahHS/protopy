@@ -2,13 +2,21 @@ from protopy.packets.buffer import Buffer
 from protopy.packets.serverboundpackets import ServerBoundPacket
 from protopy.packets.packet import PacketMode
 
+
 class HandshakePacket(ServerBoundPacket):
-    packet_id = b'\x00'
+    packet_id = b"\x00"
     mode = PacketMode.HANDSHAKING
 
-    def __init__(self, protocol_version: int, server_address: str, server_port: int, next_state: int, is_compressed: bool = False) -> None:
+    def __init__(
+        self,
+        protocol_version: int,
+        server_address: str,
+        server_port: int,
+        next_state: int,
+        is_compressed: bool = False,
+    ) -> None:
         super().__init__(
-            is_compressed = is_compressed,
+            is_compressed=is_compressed,
         )
 
         self.protocol_version = protocol_version
@@ -24,4 +32,3 @@ class HandshakePacket(ServerBoundPacket):
         buffer.write_varint(self.next_state)
 
         return buffer
-

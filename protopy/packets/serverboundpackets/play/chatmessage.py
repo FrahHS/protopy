@@ -2,15 +2,24 @@ from protopy.packets.buffer import Buffer
 from protopy.packets.serverboundpackets import ServerBoundPacket
 from protopy.packets.packet import PacketMode
 
-from typing import Optional
 
 class ChatMessagePacket(ServerBoundPacket):
-    packet_id = b'\x05'
+    packet_id = b"\x05"
     mode = PacketMode.PLAY
 
-    def __init__(self, message: str, timestamp: int, salt: int, has_signature: bool, message_count: int, acknowledged, signature: int = b'', is_compressed: bool = False) -> None:
+    def __init__(
+        self,
+        message: str,
+        timestamp: int,
+        salt: int,
+        has_signature: bool,
+        message_count: int,
+        acknowledged,
+        signature: int = b"",
+        is_compressed: bool = False,
+    ) -> None:
         super().__init__(
-            is_compressed = is_compressed,
+            is_compressed=is_compressed,
         )
 
         self.message = message
@@ -33,5 +42,3 @@ class ChatMessagePacket(ServerBoundPacket):
         buffer.write(self.acknowledged)
 
         return buffer
-
-
