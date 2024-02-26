@@ -28,8 +28,8 @@ class TcpClient:
         try:
             self._socket.connect((self.host, self.port))
             self.is_connected = True
-            Thread(target=lambda: self._listen()).start()
-            Thread(target=lambda: self._split_packets()).start()
+            Thread(name="Packet listeners", target=lambda: self._listen()).start()
+            Thread(name="Packet analyzer", target=lambda: self._split_packets()).start()
         except ConnectionRefusedError:
             logger.warning("Server is not online")
             exit()
