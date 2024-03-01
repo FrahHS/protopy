@@ -34,8 +34,6 @@ $ pip install protopy
 * Create a file `main.py` with:
 
 ```Python
-import time
-
 from protopy import ProtoPY
 from protopy.packets.clientbountpackets import ClientBoundFinishConfigurationPacket
 
