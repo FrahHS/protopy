@@ -12,9 +12,15 @@ from protopy.packets.serverboundpackets.login.loginstart import LoginStartPacket
 from protopy.packets.serverboundpackets.login.loginacknowledged import LoginAcknowledged
 
 # Configuration
-from protopy.packets.serverboundpackets.configuration.clientinformationconfiguration import ClientInformationConfigurationPacket
-from protopy.packets.serverboundpackets.configuration.finishconfigurationpacket import ServerBoundFinishConfigurationPacket
+from protopy.packets.serverboundpackets.configuration.clientinformationconfiguration import (
+    ClientInformationConfigurationPacket,
+)
+from protopy.packets.serverboundpackets.configuration.finishconfigurationpacket import (
+    ServerBoundFinishConfigurationPacket,
+)
 
 # Play
-from protopy.packets.serverboundpackets.play.serverboundkeepalivepacket import ServerboundKeepAlivePacket
+from protopy.packets.serverboundpackets.play.serverboundkeepalivepacket import (
+    ServerboundKeepAlivePacket,
+)
 from protopy.packets.serverboundpackets.play.chatmessage import ChatMessagePacket

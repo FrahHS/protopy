@@ -1,5 +1,6 @@
 import struct
 
+
 class Varint:
     def __init__(self, int: int):
         self.int = int
@@ -13,7 +14,7 @@ class Varint:
 
     @staticmethod
     def pack(d):
-        o = b''
+        o = b""
         while True:
             b = d & 0x7F
             d >>= 7
@@ -24,17 +25,17 @@ class Varint:
 
     @staticmethod
     def unpack(s):
-        d, l = 0, 0
+        d, l_ = 0, 0
         length = len(s)
         if length > 5:
             length = 5
         for i in range(length):
-            l += 1
+            l_ += 1
             b = s[i]
             d |= (b & 0x7F) << 7 * i
             if not b & 0x80:
                 break
-        return (d, s[l:])
+        return (d, s[l_:])
 
     @staticmethod
     def data_pack(data) -> bytes:

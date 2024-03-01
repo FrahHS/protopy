@@ -1,15 +1,16 @@
 from abc import ABC, abstractmethod
 
-from protopy.packets.packet import Packet, PacketDirection, PacketMode
+from protopy.packets.packet import Packet, PacketDirection
 from protopy.packets.packetreader import PacketReader
+
 
 class ClientBoundPacket(Packet, ABC):
     direction = PacketDirection.CLIENT
 
     def __init__(self, raw_data: bytes, is_compressed: bool = False) -> None:
         super().__init__(
-            raw_data = raw_data,
-            is_compressed = is_compressed,
+            raw_data=raw_data,
+            is_compressed=is_compressed,
         )
 
         self.response = {}

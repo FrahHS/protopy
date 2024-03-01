@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class DataTypes(Enum):
     BOOLEAN = 1
     BYTE = 2

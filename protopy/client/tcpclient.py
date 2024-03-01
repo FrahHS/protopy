@@ -1,3 +1,4 @@
+from inspect import signature
 import socket
 from threading import Thread
 import time
@@ -5,8 +6,8 @@ from protopy.datatypes.varint import Varint
 
 from protopy.packets.packetreader import PacketReader
 from protopy.packets.packet import Packet, PacketMode, UnknowPacket
-from protopy.packets.clientbountpackets import SetCompressionPacket
 from protopy.utils import logger
+
 
 class TcpClient:
     def __init__(self, host: str, port: int, buffer_size: int = 1024) -> None:
@@ -19,7 +20,7 @@ class TcpClient:
         self.compression = False
         self.threshold = 0
 
-        self._stream = b''
+        self._stream = b""
         self._mode = PacketMode.HANDSHAKING
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -27,8 +28,8 @@ class TcpClient:
         try:
             self._socket.connect((self.host, self.port))
             self.is_connected = True
-            Thread(target=lambda: self._listen()).start()
-            Thread(target=lambda: self._split_packets()).start()
+            Thread(name="Packet listeners", target=lambda: self._listen()).start()
+            Thread(name="Packet analyzer", target=lambda: self._split_packets()).start()
         except ConnectionRefusedError:
             logger.warning("Server is not online")
             exit()
@@ -48,7 +49,7 @@ class TcpClient:
 
     def _packets_handler(self, packet: Packet):
         # Set connection mode
-        if(not isinstance(packet, UnknowPacket)):
+        if not isinstance(packet, UnknowPacket):
             self._mode = packet.next_mode
 
         # Call listeners
@@ -56,7 +57,7 @@ class TcpClient:
 
     def _split_packets(self):
         while self.is_connected:
-            if self._stream != b'':
+            if self._stream != b"":
                 lenght, body = Varint.unpack(self._stream)
                 if len(body) >= lenght:
                     self._stream = body
@@ -64,7 +65,9 @@ class TcpClient:
 
                     # Build received packet
                     packet_reader = PacketReader(compression=self.compression)
-                    packet = packet_reader.build_packet_from_raw_data(raw_data, self._mode, self.compression)
+                    packet = packet_reader.build_packet_from_raw_data(
+                        raw_data, self._mode, self.compression
+                    )
 
                     # Handle packet
                     self._packets_handler(packet)
@@ -81,24 +84,34 @@ class TcpClient:
                     self.is_connected = False
                     exit()
 
-    def listener(self, packet_class = None):
+    def listener(self, packet_class=None):
         def inner(func):
             self.add_listener(packet_class, func)
             return func
+
         return inner
 
     def add_listener(self, packet_class, func):
-        self.packets_listeners.append(
-            {"callback":func, "class": packet_class}
-        )
+        # Check if listener is valid
+        if len(signature(func).parameters) != 1:
+            raise ListenerError(
+                f"listeners must have 1 argument, {len(signature(func).parameters)} found: def {func.__name__}{signature(func)}:"
+            )
 
-    """def dispose_listener(self, func):
-        self.packets_listeners.remove(func)"""
+        # Add listener
+        self.packets_listeners.append({"callback": func, "class": packet_class})
+
+    def dispose_listener(self, func):
+        self.packets_listeners.remove(func)
 
     def call_packet_listeners(self, packet: object):
         for cur_listener in self.packets_listeners:
             if isinstance(cur_listener, dict):
                 if cur_listener["class"] == packet.__class__:
                     cur_listener["callback"](packet)
-                if cur_listener["class"] == None:
+                if cur_listener["class"] is None:
                     cur_listener["callback"](packet)
+
+
+class ListenerError(Exception):
+    pass

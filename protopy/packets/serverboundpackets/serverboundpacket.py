@@ -6,13 +6,19 @@ from protopy.packets import Packet
 from protopy.packets.buffer import Buffer
 from protopy.packets.packet import PacketDirection, PacketMode
 
+
 class ServerBoundPacket(Packet, ABC):
     direction = PacketDirection.SERVER
 
-    def __init__(self, raw_data: bytes = None, is_compressed: bool = False, next_mode: PacketMode = None) -> None:
+    def __init__(
+        self,
+        raw_data: bytes = None,
+        is_compressed: bool = False,
+        next_mode: PacketMode = None,
+    ) -> None:
         super().__init__(
-            raw_data = raw_data,
-            is_compressed = is_compressed,
+            raw_data=raw_data,
+            is_compressed=is_compressed,
         )
 
     @abstractmethod
@@ -21,9 +27,9 @@ class ServerBoundPacket(Packet, ABC):
 
     def pack(self, raw_data: bytes) -> None:
         packet = Buffer()
-        if(self.is_compressed):
+        if self.is_compressed:
             paylaod = self.packet_id + raw_data.data
-            if(len(paylaod) >= 256):
+            if len(paylaod) >= 256:
                 data_lenght = Varint(len(paylaod)).bytes
                 compressed_payload = zlib.compress(paylaod, level=9)
 
@@ -32,7 +38,7 @@ class ServerBoundPacket(Packet, ABC):
 
                 return header + lenght_and_payload
             else:
-                packet.write(b'\x00')
+                packet.write(b"\x00")
                 packet.write(self.packet_id)
                 packet.write(raw_data)
         else:

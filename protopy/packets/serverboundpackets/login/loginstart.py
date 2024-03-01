@@ -4,13 +4,16 @@ from protopy.packets.buffer import Buffer
 from protopy.packets.serverboundpackets import ServerBoundPacket
 from protopy.packets.packet import PacketMode
 
+
 class LoginStartPacket(ServerBoundPacket):
-    packet_id = b'\x00'
+    packet_id = b"\x00"
     mode = PacketMode.LOGIN
 
-    def __init__(self, name: str, player_uuid: UUID, is_compressed: bool = False) -> None:
+    def __init__(
+        self, name: str, player_uuid: UUID, is_compressed: bool = False
+    ) -> None:
         super().__init__(
-            is_compressed = is_compressed,
+            is_compressed=is_compressed,
         )
 
         self.name = name
