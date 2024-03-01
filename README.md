@@ -37,6 +37,8 @@ $ pip install protopy
 import time
 
 from protopy import ProtoPY
+from protopy.packets.clientbountpackets import ClientBoundFinishConfigurationPacket
+
 
 host = 'localhost'
 port = 25565
