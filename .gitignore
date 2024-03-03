@@ -160,6 +160,7 @@ cython_debug/
 #.idea/
 
 .vscode/
+.ruff_cache/
 
 debug.py
 test.py
