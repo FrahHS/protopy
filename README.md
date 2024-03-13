@@ -40,12 +40,13 @@ from protopy.packets.clientbountpackets import ClientBoundFinishConfigurationPac
 
 host = 'localhost'
 port = 25565
+protocol_version = 765
 
-client = ProtoPY(host=host, port=port, protocol_version=765)
+client = ProtoPY(host=host, port=port, protocol_version=protocol_version)
 
 client.login('XSteve')
 
-@client.listener(ClientBoundFinishConfigurationPacket)
+@client.listener
 def on_login(packet: ClientBoundFinishConfigurationPacket):
     print("Connected!")
 ```

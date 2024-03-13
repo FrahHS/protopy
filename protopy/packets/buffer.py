@@ -24,7 +24,7 @@ class Buffer:
             # Raise BufferTypeException if incoming data type is not matching writer data type
             if type(data) != func_data_arg_type:
                 raise BufferTypeException(
-                    f"Data type exception raised for args {self.argc} of the buffer, {type(data)} received when {func_data_arg_type} was required"
+                    f"Data type exception raised for arg {self.argc} of the buffer, {type(data)} received when {func_data_arg_type} was required"
                 )
 
             # Call the writer

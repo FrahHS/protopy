@@ -57,21 +57,25 @@ class TcpClient:
 
     def _split_packets(self):
         while self.is_connected:
-            if self._stream != b"":
-                lenght, body = Varint.unpack(self._stream)
-                if len(body) >= lenght:
-                    self._stream = body
-                    raw_data = Varint.pack(lenght) + self._stream[:lenght]
+            if self._stream == b"":
+                continue
 
-                    # Build received packet
-                    packet_reader = PacketReader(compression=self.compression)
-                    packet = packet_reader.build_packet_from_raw_data(
-                        raw_data, self._mode, self.compression
-                    )
+            lenght, body = Varint.unpack(self._stream)
+            if len(body) < lenght:
+                continue
 
-                    # Handle packet
-                    self._packets_handler(packet)
-                    self._stream = self._stream[lenght:]
+            self._stream = body
+            raw_data = Varint.pack(lenght) + self._stream[:lenght]
+
+            # Build received packet
+            packet_reader = PacketReader(compression=self.compression)
+            packet = packet_reader.build_packet_from_raw_data(
+                raw_data, self._mode, self.compression
+            )
+
+            # Handle packet
+            self._packets_handler(packet)
+            self._stream = self._stream[lenght:]
 
     def _listen(self) -> None:
         while self.is_connected:
@@ -84,6 +88,7 @@ class TcpClient:
                     self.is_connected = False
                     exit()
 
+    @property
     def listener(self):
         def inner(func):
             self.add_listener(func)
