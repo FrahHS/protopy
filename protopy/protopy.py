@@ -58,7 +58,7 @@ class ProtoPY(TcpClient):
                 logger.info(f"Disconnected: {packet.reason}")
 
         # self.packets_listeners.insert(0, _listener)
-        self.add_listener(None, _listener)
+        self.add_listener(_listener)
 
         # Handshake
         next_state = 2

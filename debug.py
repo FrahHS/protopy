@@ -16,12 +16,12 @@ client = ProtoPY(host=host, port=port, protocol_version=765)
 
 client.login('XSteve')
 
-@client.listener(PlayerChatMessagePacket)
+@client.listener()
 def l(packet: PlayerChatMessagePacket):
     if(packet.sender_name != 'XSteve'):
         print(f'{packet.sender_name}: {packet.message}')
 
-@client.listener(ClientBoundFinishConfigurationPacket)
+@client.listener()
 def l(packet: ClientBoundFinishConfigurationPacket):
     message_packet = ChatMessagePacket(
         message="I'm a bot made using Protopy",

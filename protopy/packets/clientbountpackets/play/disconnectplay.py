@@ -3,7 +3,7 @@ from protopy.packets.packet import PacketMode
 
 
 class DisconnectPlayPacket(ClientBoundPacket):
-    packet_id = b"\x1B"
+    packet_id = b"\x1b"
     mode = PacketMode.PLAY
 
     def __init__(self, raw_data: bytes, is_compressed: bool = False) -> None:
