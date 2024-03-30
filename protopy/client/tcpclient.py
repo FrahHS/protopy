@@ -1,4 +1,4 @@
-from inspect import signature
+import inspect
 import socket
 from threading import Thread
 import time
@@ -57,21 +57,25 @@ class TcpClient:
 
     def _split_packets(self):
         while self.is_connected:
-            if self._stream != b"":
-                lenght, body = Varint.unpack(self._stream)
-                if len(body) >= lenght:
-                    self._stream = body
-                    raw_data = Varint.pack(lenght) + self._stream[:lenght]
+            if self._stream == b"":
+                continue
 
-                    # Build received packet
-                    packet_reader = PacketReader(compression=self.compression)
-                    packet = packet_reader.build_packet_from_raw_data(
-                        raw_data, self._mode, self.compression
-                    )
+            lenght, body = Varint.unpack(self._stream)
+            if len(body) < lenght:
+                continue
 
-                    # Handle packet
-                    self._packets_handler(packet)
-                    self._stream = self._stream[lenght:]
+            self._stream = body
+            raw_data = Varint.pack(lenght) + self._stream[:lenght]
+
+            # Build received packet
+            packet_reader = PacketReader(compression=self.compression)
+            packet = packet_reader.build_packet_from_raw_data(
+                raw_data, self._mode, self.compression
+            )
+
+            # Handle packet
+            self._packets_handler(packet)
+            self._stream = self._stream[lenght:]
 
     def _listen(self) -> None:
         while self.is_connected:
@@ -84,19 +88,29 @@ class TcpClient:
                     self.is_connected = False
                     exit()
 
-    def listener(self, packet_class=None):
+    @property
+    def listener(self):
         def inner(func):
-            self.add_listener(packet_class, func)
+            self.add_listener(func)
             return func
 
         return inner
 
-    def add_listener(self, packet_class, func):
+    def add_listener(self, func):
         # Check if listener is valid
-        if len(signature(func).parameters) != 1:
+        if len(inspect.signature(func).parameters) != 1:
+            listener_argc = len(inspect.signature(func).parameters)
             raise ListenerError(
-                f"listeners must have 1 argument, {len(signature(func).parameters)} found: def {func.__name__}{signature(func)}:"
+                f"listeners must have 1 argument, {listener_argc} found: def {func.__name__}{inspect.signature(func)}:"
             )
+
+        # Get listener packet arg type
+        func_args_spec = list(inspect.getfullargspec(func).annotations.values())
+
+        if len(func_args_spec) == 0:
+            packet_class = None
+        else:
+            packet_class = func_args_spec[0]
 
         # Add listener
         self.packets_listeners.append({"callback": func, "class": packet_class})
@@ -109,7 +123,7 @@ class TcpClient:
             if isinstance(cur_listener, dict):
                 if cur_listener["class"] == packet.__class__:
                     cur_listener["callback"](packet)
-                if cur_listener["class"] is None:
+                elif cur_listener["class"] is None:
                     cur_listener["callback"](packet)
 
 
