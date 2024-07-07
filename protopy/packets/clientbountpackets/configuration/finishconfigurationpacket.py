@@ -3,7 +3,7 @@ from protopy.packets.packet import PacketMode
 
 
 class ClientBoundFinishConfigurationPacket(ClientBoundPacket):
-    packet_id = b"\x02"
+    packet_id = b"\x03"
     mode = PacketMode.CONFIGURATION
 
     def __init__(self, raw_data: bytes, is_compressed: bool = False) -> None:

@@ -3,7 +3,7 @@ import uuid
 import zlib
 import io
 import gzip
-from nbt.nbt import NBTFile, MalformedFileError
+#from nbt.nbt import NBTFile, MalformedFileError
 
 from protopy.datatypes.varint import Varint
 from protopy.packets.packet import Packet, PacketDirection, PacketMode, UnknowPacket
@@ -149,7 +149,7 @@ class PacketReader:
         lenght, string = Varint.unpack(data)
         return (string[:lenght].decode(), data[lenght + 1 :])
 
-    def read_chat(self, data: bytes) -> tuple[NBTFile, bytes]:
+    '''def read_chat(self, data: bytes) -> tuple[NBTFile, bytes]:
         """
         Reads chat data from the data.
 
@@ -172,7 +172,7 @@ class PacketReader:
             return (nbtfile, data)
         except MalformedFileError as e:
             logger.warning(f"NBTFile parsing error {e}\nraw data:\n{data}")
-            return (data, data)
+            return (data, data)'''
 
     # TODO: Implement these methods
     def read_json_chat(self, data: str) -> tuple:

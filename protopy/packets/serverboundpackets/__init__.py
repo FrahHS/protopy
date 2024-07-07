@@ -18,6 +18,9 @@ from protopy.packets.serverboundpackets.configuration.clientinformationconfigura
 from protopy.packets.serverboundpackets.configuration.finishconfigurationpacket import (
     ServerBoundFinishConfigurationPacket,
 )
+from protopy.packets.serverboundpackets.configuration.knownpacketspacket import (
+    KnownPacketsPacket,
+)
 
 # Play
 from protopy.packets.serverboundpackets.play.serverboundkeepalivepacket import (

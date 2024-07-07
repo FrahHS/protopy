@@ -3,7 +3,7 @@ from protopy.packets.packet import PacketMode
 
 
 class ClientboundKeepAlivePacket(ClientBoundPacket):
-    packet_id = b"\x24"
+    packet_id = b"\x26"
     mode = PacketMode.PLAY
 
     def __init__(self, raw_data: bytes, is_compressed: bool = False) -> None:

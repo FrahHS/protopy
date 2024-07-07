@@ -3,10 +3,9 @@ from protopy.packets.serverboundpackets import ServerBoundPacket
 from protopy.packets.packet import PacketMode
 
 
-class ServerBoundFinishConfigurationPacket(ServerBoundPacket):
-    packet_id = b"\x03"
+class KnownPacketsPacket(ServerBoundPacket):
+    packet_id = b"\x07"
     mode = PacketMode.CONFIGURATION
-    next_mode = PacketMode.PLAY
 
     def __init__(self, is_compressed: bool = False) -> None:
         super().__init__(
@@ -15,6 +14,6 @@ class ServerBoundFinishConfigurationPacket(ServerBoundPacket):
 
     def _write(self):
         buffer = Buffer()
-        buffer.write(b"")
+        buffer.write_varint(0)
 
         return buffer

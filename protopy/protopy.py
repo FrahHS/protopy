@@ -15,6 +15,7 @@ from protopy.packets.serverboundpackets import (
     LoginStartPacket,
     ServerboundKeepAlivePacket,
     ServerBoundFinishConfigurationPacket,
+    KnownPacketsPacket
 )
 
 
@@ -27,6 +28,8 @@ class ProtoPY(TcpClient):
         self.connect()
 
     def _packets_handler(self, packet):
+        print(packet.packet_id)
+
         # Check for compression
         if isinstance(packet, SetCompressionPacket):
             self.compression = True
@@ -49,6 +52,10 @@ class ProtoPY(TcpClient):
         def _listener(packet):
             if isinstance(packet, LoginSuccessPacket):
                 self.sendPacket(LoginAcknowledged())
+
+            if packet.packet_id == b'\x0e':
+                self.sendPacket(KnownPacketsPacket())
+                logger.debug(f"Known packets packet sent")
 
             if isinstance(packet, ClientBoundFinishConfigurationPacket):
                 self.sendPacket(ServerBoundFinishConfigurationPacket())

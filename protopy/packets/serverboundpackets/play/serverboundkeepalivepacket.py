@@ -4,7 +4,7 @@ from protopy.packets.packet import PacketMode
 
 
 class ServerboundKeepAlivePacket(ServerBoundPacket):
-    packet_id = b"\x15"
+    packet_id = b"\x18"
     mode = PacketMode.PLAY
 
     def __init__(self, keep_alive_id: bytes, is_compressed: bool = False) -> None:

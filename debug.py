@@ -4,6 +4,7 @@ import time
 from protopy import ProtoPY
 from protopy.datatypes.bitset import BitSet
 
+from protopy.packets import Packet
 from protopy.packets.clientbountpackets import PlayerChatMessagePacket, ClientBoundFinishConfigurationPacket
 from protopy.packets.serverboundpackets import ChatMessagePacket
 from protopy.utils import logger
@@ -12,15 +13,21 @@ logger.setLevel(logging.DEBUG)
 host = 'localhost'
 port = 25565
 
-client = ProtoPY(host=host, port=port, protocol_version=765)
+client = ProtoPY(host=host, port=port, protocol_version=767)
 
 client.login('XSteve')
+
+@client.listener
+def l(packet: Packet):
+    print(f'{packet.data_pack}')
+
 
 @client.listener
 def l(packet: PlayerChatMessagePacket):
     if(packet.sender_name != 'XSteve'):
         print(f'{packet.sender_name}: {packet.message}')
 
+'''
 @client.listener
 def l(packet: ClientBoundFinishConfigurationPacket):
     message_packet = ChatMessagePacket(
@@ -32,3 +39,4 @@ def l(packet: ClientBoundFinishConfigurationPacket):
         acknowledged=BitSet(20).tobytes(),
     )
     client.sendPacket(message_packet)
+'''
