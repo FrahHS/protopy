@@ -1,0 +1,21 @@
+Header {
+    protocol_version = 767;
+    packet_id = 0x02;
+    state = LOGIN;
+    bound = CLIENT;
+}
+
+Packet LoginSuccess {
+    UUID uuid;
+    String(16) username;
+    VarInt number_of_properties;
+
+    Array Property {
+        String(32767) Name;
+        String(32767) Value;
+        Bool is_signed;
+        Optional String(32767) signature;
+    };
+
+    Bool strict_error_handling;
+}
