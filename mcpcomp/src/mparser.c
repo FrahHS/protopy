@@ -2,6 +2,17 @@
 #include <stdlib.h>
 #include "mparser.h"
 
+void parser_show_expected(Parser *parser, TokenType expected, TokenType got) {
+    printf( RED
+        "%s(%d,%d): Syntax error: expected %s, got %s.\n" RESET,
+        parser->filename,
+        ((Token *)dynamic_array_get(parser->tokens, parser->index))->line,
+        ((Token *)dynamic_array_get(parser->tokens, parser->index))->col,
+        token_type_to_string(expected),
+        token_type_to_string(got)
+    );
+}
+
 PacketState str_to_packet_state(char *str) {
     if(strcmp(str, "HANDSHAKING")) {
         return HANDSHAKING;
@@ -66,7 +77,7 @@ void print_header(Header *header) {
     printf("\tbound: %s\n", packet_bound_to_str(header->bound));
     printf("\n");
 }
-
+/*
 void print_field_recursive(Field *field, int depth) {
     const char *indent = "    "; // 4 spazi per ogni livello
     for (int i = 0; i < depth; i++) printf("%s", indent);
@@ -103,11 +114,11 @@ void print_packet(Packet *packet) {
         print_field_recursive(field, 1);
     }
     printf("\n");
-}
+}*/
 
 void print(Program *program) {
     print_header(&program->header);
-    print_packet(&program->packet);
+    //print_packet(&program->packet);
 }
 
 Token* parser_get_token_at(Parser* parser, unsigned long index) {
@@ -158,10 +169,10 @@ int header_assignment(Parser *parser, Header *header, char *identifier, TokenTyp
 
     parser_advance(parser);
     parser_current(parser, &token);
-    if(token.type != expected_token) {
+    /*if(token.type != expected_token) {
         parser_show_expected(parser, expected_token, token.type);
         return 1;
-    }
+    }*/
 
     if(strcmp(identifier, "protocol_version") == 0) {
         header->protocol_version = atoi(token.value);
@@ -183,18 +194,18 @@ int header_assignment(Parser *parser, Header *header, char *identifier, TokenTyp
     return 0;
 }
 
-int build_header(Parser *parser, Header *header) {
+int parser_build_header(Parser *parser, Header *header) {
     Token token;
     parser_current(parser, &token);
 
-    if(token.type != HEADER) {
+    if(token.value != "Header") {
         parser_show_expected(parser, HEADER, token.type);
         return 1;
     }
     parser_advance(parser);
     parser_current(parser, &token);
 
-    if (token.type != BRACKET_OPEN) {
+    if (token.value != "{") {
         parser_show_expected(parser, BRACKET_OPEN, token.type);
         return 1;
     }
@@ -203,23 +214,24 @@ int build_header(Parser *parser, Header *header) {
 
     do {
         if(strcmp(token.value, "protocol_version") == 0) {
-            header_assignment(parser, header, "protocol_version", INT_LITERAL);
+            header_assignment(parser, header, "protocol_version", LITERAL);
+            parser->protocol_version = header->protocol_version;
             parser_advance(parser);
         } else if(strcmp(token.value, "packet_id") == 0) {
-            header_assignment(parser, header, "packet_id", BYTE_LITERAL);
+            header_assignment(parser, header, "packet_id", LITERAL);
             parser_advance(parser);
         } else if(strcmp(token.value, "state") == 0) {
-            header_assignment(parser, header, "state", STRING_LITERAL);
+            header_assignment(parser, header, "state", LITERAL);
             parser_advance(parser);
         } else if(strcmp(token.value, "bound") == 0) {
-            header_assignment(parser, header, "bound", STRING_LITERAL);
+            header_assignment(parser, header, "bound", LITERAL);
             parser_advance(parser);
         } else {
             printf("Invalid Header identifier: %s", token.value);
             return 1;
         }
         parser_current(parser, &token);
-    } while (token.type != BRACKET_CLOSE);
+    } while (token.value != "}");
 
     return 0;
 }
@@ -227,7 +239,7 @@ int build_header(Parser *parser, Header *header) {
 /*
  * Edgecases: Optional(not mandatory), String(require a size), Array(different structure)
 */
-int next_field(Parser *parser, Field *field) {
+/*int next_field(Parser *parser, Field *field) {
     Token token;
 
     field->optional = 0;
@@ -312,9 +324,9 @@ int next_field(Parser *parser, Field *field) {
     parser_advance(parser);
 
     return 0;
-}
+}*/
 
-int packet_assignment(Parser *parser, Packet *packet) {
+/*int packet_assignment(Parser *parser, Packet *packet) {
     Token token;
 
     do {
@@ -331,9 +343,9 @@ int packet_assignment(Parser *parser, Packet *packet) {
     } while (token.type != BRACKET_CLOSE);
 
     return 0;
-}
+}*/
 
-int build_packet(Parser *parser, Packet *packet) {
+/*int build_packet(Parser *parser, Packet *packet) {
     Token token;
 
     packet->fields = malloc(sizeof(DynamicArray));
@@ -370,27 +382,27 @@ int build_packet(Parser *parser, Packet *packet) {
     } while (token.type != BRACKET_CLOSE);
 
     return 0;
-}
+}*/
 
-int build_program(Parser* parser, Program *program) {
+int parser_build_program(Parser* parser, Program *program) {
     Token token;
     Header *header = &(program->header);
     Packet *packet = &(program->packet);
 
-    build_header(parser, header);
+    parser_build_header(parser, header);
     parser_current(parser, &token);
     if (token.type != BRACKET_CLOSE) {
         return 1;
     }
     parser_advance(parser);
 
-    build_packet(parser, packet);
+    /*build_packet(parser, packet);
     parser_current(parser, &token);
     if (token.type != BRACKET_CLOSE) {
         return 1;
     }
 
-    parser_advance(parser);
+    parser_advance(parser);*/
     parser_current(parser, &token);
     if (token.type != END) {
         return 1;
@@ -406,7 +418,7 @@ void parser_run(const char *filename, DynamicArray *tokens, Program *program) {
         .index = 0,
     };
 
-    if(!build_program(&parser, program)) {
+    if(!parser_build_program(&parser, program)) {
         printf("Parsing stage completed with success!\n");
     } else {
         printf("Parsing exited with errors!\n");

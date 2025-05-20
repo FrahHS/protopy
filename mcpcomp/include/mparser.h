@@ -2,32 +2,21 @@
 #define MPARSER_H
 
 #include "util.h"
+#include "datatype.h"
 #include "lexer.h"
 
 typedef struct {
         const char *filename;
         DynamicArray *tokens;
+        int protocol_version;
         unsigned int index;
 } Parser;
 
-typedef enum {
-    HANDSHAKING,
-    STATUS,
-    CONFIGURATION,
-    LOGIN,
-    PLAY,
-} PacketState;
-
-typedef enum {
-    SERVER,
-    CLIENT
-} PacketBound;
-
 typedef struct {
-    TokenType type;
+    DataType type;
+    char *identifier;
     int size;
     int optional;
-    char *identifier;
     DynamicArray *sub_fields;
 } Field;
 
@@ -47,17 +36,6 @@ typedef struct {
     Header header;
     Packet packet;
 } Program;
-
-void parser_show_expected(Parser *parser, TokenType expected, TokenType got) {
-    printf(
-        "%s(%d,%d): Syntax error: expected %s, got %s.\n",
-        parser->filename,
-        ((Token *)dynamic_array_get(parser->tokens, parser->index))->line,
-        ((Token *)dynamic_array_get(parser->tokens, parser->index))->col,
-        token_type_to_string(expected),
-        token_type_to_string(got)
-    );
-}
 
 void parser_run(const char *filename, DynamicArray *tokens, Program *program);
 

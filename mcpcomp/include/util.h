@@ -6,6 +6,24 @@
 
 #define MAX_STR_LEN 4096
 
+#define RESET   "\033[0m"
+#define BLACK   "\033[30m"      /* Black */
+#define RED     "\033[31m"      /* Red */
+#define GREEN   "\033[32m"      /* Green */
+#define YELLOW  "\033[33m"      /* Yellow */
+#define BLUE    "\033[34m"      /* Blue */
+#define MAGENTA "\033[35m"      /* Magenta */
+#define CYAN    "\033[36m"      /* Cyan */
+#define WHITE   "\033[37m"      /* White */
+#define BOLDBLACK   "\033[1m\033[30m"      /* Bold Black */
+#define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
+#define BOLDGREEN   "\033[1m\033[32m"      /* Bold Green */
+#define BOLDYELLOW  "\033[1m\033[33m"      /* Bold Yellow */
+#define BOLDBLUE    "\033[1m\033[34m"      /* Bold Blue */
+#define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
+#define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
+#define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
+
 typedef unsigned char byte;
 
 typedef struct {
@@ -14,79 +32,10 @@ typedef struct {
     unsigned long length;
 } DynamicArray;
 
-void dynamic_array_init(DynamicArray *dynamic_array, unsigned long item_size) {
-    dynamic_array->items = NULL;
-    dynamic_array->item_size = item_size;
-    dynamic_array->length = 0;
-}
-
-void dynamic_array_append(DynamicArray *dynamic_array, const void *item) {
-    void *new_items;
-
-    new_items = realloc(dynamic_array->items, (dynamic_array->length + 1) * dynamic_array->item_size);
-
-    dynamic_array->items = new_items;
-
-    // Copy item into the newly allocated position
-    memcpy((char *)dynamic_array->items + dynamic_array->length * dynamic_array->item_size, item, dynamic_array->item_size);
-
-    dynamic_array->length++;
-}
-
-void *dynamic_array_get(DynamicArray *dynamic_array, unsigned long index) {
-    if(index >= dynamic_array->length) {
-        return NULL;
-    }
-
-    return (char *)dynamic_array->items + index * dynamic_array->item_size;
-}
-
-void append_char(char *str, char c) {
-    size_t len = strlen(str);
-    if(len == MAX_STR_LEN - 1) {
-        printf("Error: Keyword exceded max length of %d", MAX_STR_LEN);
-        return 1;
-    }
-
-    str[len] = c;
-    str[len + 1] = '\0';
-}
-
-long read_source(const char *filename, char **buffer) {
-    if (filename == NULL || buffer == NULL) {
-        printf("Invalid source file name.\n");
-        return -1;
-    }
-
-    FILE *file = fopen(filename, "r");
-    if (file == NULL) {
-        printf("Failed to open the file: %s\n", filename);
-        return -1;
-    }
-
-    fseek(file, 0, SEEK_END);
-    long fsize = ftell(file);
-    rewind(file);
-
-    *buffer = (char*) malloc(fsize + 1);
-    if (*buffer == NULL) {
-        printf("Memory allocation failed.\n");
-        fclose(file);
-        return -1;
-    }
-
-    size_t read = fread(*buffer, 1, fsize, file);
-    if (read != fsize) {
-        printf("Failed to read the entire file.\n");
-        free(*buffer);
-        fclose(file);
-        return -1;
-    }
-
-    (*buffer)[fsize] = '\0';
-    fclose(file);
-
-    return fsize;
-}
+void dynamic_array_init(DynamicArray *dynamic_array, unsigned long item_size);
+void dynamic_array_append(DynamicArray *dynamic_array, const void *item);
+void *dynamic_array_get(DynamicArray *dynamic_array, unsigned long index);
+void append_char(char *str, char c);
+long read_source(const char *filename, char **buffer);
 
 #endif // UTIL_H
