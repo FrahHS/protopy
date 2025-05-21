@@ -35,7 +35,7 @@ typedef struct {
 void dynamic_array_init(DynamicArray *dynamic_array, unsigned long item_size);
 void dynamic_array_append(DynamicArray *dynamic_array, const void *item);
 void *dynamic_array_get(DynamicArray *dynamic_array, unsigned long index);
-void append_char(char *str, char c);
+int append_char(char *str, char c);
 long read_source(const char *filename, char **buffer);
 
 #endif // UTIL_H

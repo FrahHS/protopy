@@ -1,320 +1,47 @@
 #include "datatype.h"
 
 const DataType data_types[] = {
-    /* PROTOCOL VERSION 767 */
-
-    // DataType: Boolean
-    {
-        .type_name = "BOOLEAN",
-        .keyword = "Boolean",
-        .protocol = 767,
-        .writer_implementation = "self.body += b\"\\x01\" ifdata else b\"\\x00\""
-    },
-
-    // DataType: Byte
-    {
-        .type_name = "BYTE",
-        .keyword = "Byte",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: Unsigned Byte
-    {
-        .type_name = "UNSIGNED_BYTE",
-        .keyword = "UnsignedByte",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: Short
-    {
-        .type_name = "SHORT",
-        .keyword = "Short",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: Unsigned Short
-    {
-        .type_name = "UNSIGNED_SHORT",
-        .keyword = "UnsignedShort",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: Int
-    {
-        .type_name = "INT",
-        .keyword = "Int",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: Long
-    {
-        .type_name = "LONG",
-        .keyword = "Long",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: Float
-    {
-        .type_name = "FLOAT",
-        .keyword = "Float",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: Double
-    {
-        .type_name = "DOUBLE",
-        .keyword = "Double",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: String
-    {
-        .type_name = "STRING",
-        .keyword = "String",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: TextComponent
-    {
-        .type_name = "TEXT_COMPONENT",
-        .keyword = "TextComponent",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: JsonTextComponent
-    {
-        .type_name = "JSON_TEXT_COMPONENT",
-        .keyword = "JsonTextComponent",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: Identifier
-    {
-        .type_name = "IDENTIFIER",
-        .keyword = "Identifier",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: VarInt
-    {
-        .type_name = "VARINT",
-        .keyword = "VarInt",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: VarLong
-    {
-        .type_name = "VARLONG",
-        .keyword = "VarLong",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: EntityMetadata
-    {
-        .type_name = "ENTITY_METADATA",
-        .keyword = "EntityMetadata",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: Slot
-    {
-        .type_name = "SLOT",
-        .keyword = "Slot",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: HashedSlot
-    {
-        .type_name = "HASHED_SLOT",
-        .keyword = "HashedSlot",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: NBT
-    {
-        .type_name = "NBT",
-        .keyword = "NBT",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: Position
-    {
-        .type_name = "POSITION",
-        .keyword = "Position",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: Angle
-    {
-        .type_name = "ANGLE",
-        .keyword = "Angle",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: UUID
-    {
-        .type_name = "UUID",
-        .keyword = "UUID",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: BitSet
-    {
-        .type_name = "BITSET",
-        .keyword = "BitSet",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: FixedBitSet
-    {
-        .type_name = "FIXED_BITSET",
-        .keyword = "FixedBitSet",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: Optional<X>
-    {
-        .type_name = "OPTIONAL_X",
-        .keyword = "Optional",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: PrefixedOptional<X>
-    {
-        .type_name = "PREFIXED_OPTIONAL_X",
-        .keyword = "PrefixedOptional",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: Array<X>
-    {
-        .type_name = "ARRAY_OF_X",
-        .keyword = "Array",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: PrefixedArray<X>
-    {
-        .type_name = "PREFIXED_ARRAY_OF_X",
-        .keyword = "PrefixedArray",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: X_ENUM
-    {
-        .type_name = "X_ENUM",
-        .keyword = "XEnum",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: EnumSet
-    {
-        .type_name = "ENUM_SET",
-        .keyword = "EnumSet",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: ByteArray
-    {
-        .type_name = "BYTE_ARRAY",
-        .keyword = "ByteArray",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: IdOrX
-    {
-        .type_name = "ID_OR_X",
-        .keyword = "IdOrX",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: IdSet
-    {
-        .type_name = "ID_SET",
-        .keyword = "IdSet",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: SoundEvent
-    {
-        .type_name = "SOUND_EVENT",
-        .keyword = "SoundEvent",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: ChatType
-    {
-        .type_name = "CHAT_TYPE",
-        .keyword = "ChatType",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: TeleportFlags
-    {
-        .type_name = "TELEPORT_FLAGS",
-        .keyword = "TeleportFlags",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: RecipeDisplay
-    {
-        .type_name = "RECIPE_DISPLAY",
-        .keyword = "RecipeDisplay",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: ChunkData
-    {
-        .type_name = "CHUNK_DATA",
-        .keyword = "ChunkData",
-        .protocol = 767,
-        .writer_implementation = ""
-    },
-
-    // DataType: LightData
-    {
-        .type_name = "LIGHT_DATA",
-        .keyword = "LightData",
-        .protocol = 767,
-        .writer_implementation = ""
-    }
+    DATATYPE(767, "BOOLEAN",                "Boolean",              "self.body += b\"\\x01\" if data else b\"\\x00\""   ),
+    DATATYPE(767, "BYTE",                   "Byte",                 ""                                                  ),
+    DATATYPE(767, "UNSIGNED_BYTE",          "UnsignedByte",         ""                                                  ),
+    DATATYPE(767, "SHORT",                  "Short",                ""                                                  ),
+    DATATYPE(767, "UNSIGNED_SHORT",         "UnsignedShort",        ""                                                  ),
+    DATATYPE(767, "INT",                    "Int",                  ""                                                  ),
+    DATATYPE(767, "LONG",                   "Long",                 ""                                                  ),
+    DATATYPE(767, "FLOAT",                  "Float",                ""                                                  ),
+    DATATYPE(767, "DOUBLE",                 "Double",               ""                                                  ),
+    DATATYPE(767, "STRING",                 "String",               ""                                                  ),
+    DATATYPE(767, "TEXT_COMPONENT",         "TextComponent",        ""                                                  ),
+    DATATYPE(767, "JSON_TEXT_COMPONENT",    "JsonTextComponent",    ""                                                  ),
+    DATATYPE(767, "IDENTIFIER",             "Identifier",           ""                                                  ),
+    DATATYPE(767, "VARINT",                 "VarInt",               ""                                                  ),
+    DATATYPE(767, "VARLONG",                "VarLong",              ""                                                  ),
+    DATATYPE(767, "ENTITY_METADATA",        "EntityMetadata",       ""                                                  ),
+    DATATYPE(767, "SLOT",                   "Slot",                 ""                                                  ),
+    DATATYPE(767, "HASHED_SLOT",            "HashedSlot",           ""                                                  ),
+    DATATYPE(767, "NBT",                    "NBT",                  ""                                                  ),
+    DATATYPE(767, "POSITION",               "Position",             ""                                                  ),
+    DATATYPE(767, "ANGLE",                  "Angle",                ""                                                  ),
+    DATATYPE(767, "UUID",                   "UUID",                 ""                                                  ),
+    DATATYPE(767, "BITSET",                 "BitSet",               ""                                                  ),
+    DATATYPE(767, "FIXED_BITSET",           "FixedBitSet",          ""                                                  ),
+    DATATYPE(767, "OPTIONAL_X",             "Optional",             ""                                                  ),
+    DATATYPE(767, "PREFIXED_OPTIONAL_X",    "PrefixedOptional",     ""                                                  ),
+    DATATYPE(767, "ARRAY_OF_X",             "Array",                ""                                                  ),
+    DATATYPE(767, "PREFIXED_ARRAY_OF_X",    "PrefixedArray",        ""                                                  ),
+    DATATYPE(767, "X_ENUM",                 "XEnum",                ""                                                  ),
+    DATATYPE(767, "ENUM_SET",               "EnumSet",              ""                                                  ),
+    DATATYPE(767, "BYTE_ARRAY",             "ByteArray",            ""                                                  ),
+    DATATYPE(767, "ID_OR_X",                "IdOrX",                ""                                                  ),
+    DATATYPE(767, "ID_SET",                 "IdSet",                ""                                                  ),
+    DATATYPE(767, "SOUND_EVENT",            "SoundEvent",           ""                                                  ),
+    DATATYPE(767, "CHAT_TYPE",              "ChatType",             ""                                                  ),
+    DATATYPE(767, "TELEPORT_FLAGS",         "TeleportFlags",        ""                                                  ),
+    DATATYPE(767, "RECIPE_DISPLAY",         "RecipeDisplay",        ""                                                  ),
+    DATATYPE(767, "CHUNK_DATA",             "ChunkData",            ""                                                  ),
+    DATATYPE(767, "LIGHT_DATA",             "LightData",            ""                                                  )
 };
+
 
 const int DATA_TYPE_SIZE = sizeof(data_types) / sizeof(data_types[0]);
 
@@ -372,42 +99,11 @@ const char *datatype_get_type_name_from_keyword(const char *keyword, int protoco
 }
 
 const PacketState packet_states[] = {
-    /* PROTOCOL VERSION 767 */
-
-    // PacketState: HANDSHAKING
-    {
-        .type_name = "HANDSHAKING",
-        .keyword = "HANDSHAKING",
-        .protocol = 767,
-    },
-
-    // PacketState: STATUS
-    {
-        .type_name = "STATUS",
-        .keyword = "STATUS",
-        .protocol = 767,
-    },
-
-    // PacketState: CONFIGURATION
-    {
-        .type_name = "CONFIGURATION",
-        .keyword = "CONFIGURATION",
-        .protocol = 767,
-    },
-
-    // PacketState: LOGIN
-    {
-        .type_name = "LOGIN",
-        .keyword = "LOGIN",
-        .protocol = 767,
-    },
-
-    // PacketState: PLAY
-    {
-        .type_name = "PLAY",
-        .keyword = "PLAY",
-        .protocol = 767,
-    }
+    PACKETSTATE(767, "HANDSHAKING",   "HANDSHAKING"),
+    PACKETSTATE(767, "STATUS",        "STATUS"),
+    PACKETSTATE(767, "CONFIGURATION", "CONFIGURATION"),
+    PACKETSTATE(767, "LOGIN",         "LOGIN"),
+    PACKETSTATE(767, "PLAY",          "PLAY")
 };
 
 const int PACKET_STATE_COUNT = sizeof(packet_states) / sizeof(packet_states[0]);
@@ -459,21 +155,8 @@ const char *packet_state_get_type_name(const char *keyword, int protocol) {
 }
 
 const PacketBound packet_bound[] = {
-    /* PROTOCOL VERSION 767 */
-
-    // PacketBound: SERVER
-    {
-        .type_name = "SERVER",
-        .keyword = "SERVER",
-        .protocol = 767,
-    },
-
-    // PacketBound: CLIENT
-    {
-        .type_name = "CLIENT",
-        .keyword = "CLIENT",
-        .protocol = 767,
-    }
+    PACKETBOUND(767, "SERVER", "SERVER"),
+    PACKETBOUND(767, "CLIENT", "CLIENT")
 };
 
 const int PACKET_BOUND_COUNT = sizeof(packet_bound) / sizeof(packet_bound[0]);

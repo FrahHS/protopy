@@ -27,7 +27,7 @@ void *dynamic_array_get(DynamicArray *dynamic_array, unsigned long index) {
     return (char *)dynamic_array->items + index * dynamic_array->item_size;
 }
 
-void append_char(char *str, char c) {
+int append_char(char *str, char c) {
     size_t len = strlen(str);
     if(len == MAX_STR_LEN - 1) {
         printf("Error: Keyword exceded max length of %d", MAX_STR_LEN);
@@ -36,6 +36,8 @@ void append_char(char *str, char c) {
 
     str[len] = c;
     str[len + 1] = '\0';
+
+    return 0;
 }
 
 long read_source(const char *filename, char **buffer) {

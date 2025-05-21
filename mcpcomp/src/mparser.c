@@ -38,7 +38,7 @@ void parser_panic(Parser *p, char *message) {
 
 void header_print(Header *header) {
     printf("Header:\n");
-    printf("\tint protocol_version: %d\n", header->protocol_version);
+    printf("\tprotocol_version: %d\n", header->protocol_version);
     printf("\tpacket_id: %d\n", header->packet_id);
     printf("\tstate: %s\n", header->state.keyword);
     printf("\tbound: %s\n", header->bound.keyword);
@@ -141,6 +141,8 @@ int parser_parse_header_parameter(Parser *p, Header *header) {
     } else if(strcmp(identifier, "bound") == 0) {
         parser_expect(p, PACKETBOUND);
         header->bound = *packet_bound_get_by_keyword_general(p->token->literal);
+    } else {
+        parser_print_error(p, "Unexpected identifier found in the Header");
     }
     parser_next(p);
 

@@ -10,17 +10,26 @@ typedef struct {
     const char *writer_implementation;
 } DataType;
 
+#define DATATYPE(version, name, keyword_str, writer) \
+    { .type_name = name, .keyword = keyword_str, .protocol = version, .writer_implementation = writer }
+
 typedef struct {
     const char *type_name;
     const char *keyword;
     int protocol;
 } PacketState;
 
+#define PACKETSTATE(version, name, keyword_str) \
+    { .type_name = name, .keyword = keyword_str, .protocol = version }
+
 typedef struct {
     const char *type_name;
     const char *keyword;
     int protocol;
 } PacketBound;
+
+#define PACKETBOUND(version, name, keyword_str) \
+    { .type_name = name, .keyword = keyword_str, .protocol = version }
 
 extern const DataType data_types[];
 extern const int DATA_TYPE_COUNT;
