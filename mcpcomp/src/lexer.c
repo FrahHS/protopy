@@ -30,7 +30,7 @@ const char* token_type_to_string(TokenType type) {
 
 void lexer_print_error(Lexer *l, char *message, ...) {
     printf(
-        RED "%s(%d,%d): %s.\n" RESET,
+        RED "%s(%d,%d): %s\n" RESET,
         l->filename,
         l->line,
         l->col,
@@ -88,7 +88,7 @@ int lexer_match_next(Lexer *l, char c) {
     return 1;
 }
 
-void lexer_init(Lexer *l, char *filename,char *buffer, unsigned long buffer_len) {
+void lexer_init(Lexer *l, char *filename, char *buffer, unsigned long buffer_len) {
     l->filename = filename;
     l->buffer = buffer;
     l->buffer_len = buffer_len;
@@ -225,7 +225,7 @@ Token lexer_next_token(Lexer *l) {
         case '(': lexer_read_char(l); return lexer_generate_token(l, PARENTHESIS_OPEN,  "(");
         case ')': lexer_read_char(l); return lexer_generate_token(l, PARENTHESIS_CLOSE, ")");
         case '{': lexer_read_char(l); return lexer_generate_token(l, BRACKET_OPEN,      "{");
-        case '}': lexer_read_char(l); return lexer_generate_token(l, BRACKET_OPEN,      "}");
+        case '}': lexer_read_char(l); return lexer_generate_token(l, BRACKET_CLOSE,     "}");
         case ';': lexer_read_char(l); return lexer_generate_token(l, SEMICOLON,         ";");
         case '=': lexer_read_char(l); return lexer_generate_token(l, EQUAL,             "=");
 
@@ -245,12 +245,12 @@ Token lexer_next_token(Lexer *l) {
 }
 
 int lexer_tokenize(char *buffer, char *filename, unsigned long length, DynamicArray *tokens) {
-    Lexer l;
-    lexer_init(&l, filename, buffer, length);
+    Lexer lexer;
+    lexer_init(&lexer, filename, buffer, length);
 
     Token token;
     do {
-        token = lexer_next_token(&l);
+        token = lexer_next_token(&lexer);
         dynamic_array_append(tokens, &token);
     } while(token.type != END);
 

@@ -8,6 +8,7 @@
 typedef struct {
         const char *filename;
         DynamicArray *tokens;
+        Token *token;
         int protocol_version;
         unsigned int index;
 } Parser;
@@ -17,7 +18,7 @@ typedef struct {
     char *identifier;
     int size;
     int optional;
-    DynamicArray *sub_fields;
+    DynamicArray sub_fields;
 } Field;
 
 typedef struct {
@@ -29,7 +30,7 @@ typedef struct {
 
 typedef struct {
     char *identifier;
-    DynamicArray *fields;
+    DynamicArray fields;
 } Packet;
 
 typedef struct {
@@ -37,6 +38,7 @@ typedef struct {
     Packet packet;
 } Program;
 
-void parser_run(const char *filename, DynamicArray *tokens, Program *program);
+Program parser_parse(char *filename, DynamicArray *tokens);
+void program_print(Program *program);
 
 #endif // MPARSER_H

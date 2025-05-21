@@ -44,8 +44,8 @@ typedef struct {
     int col;
 } Lexer;
 
-const char *token_type_to_string(enum TokenType type);
 void token_print(Token tokens);
 int lexer_tokenize(char *buffer, char *filename, unsigned long length, DynamicArray *tokens);
+const char* token_type_to_string(TokenType type);
 
 #endif //LEXER_H

@@ -21,20 +21,7 @@ typedef struct {
     const char *keyword;
     int protocol;
 } PacketBound;
-/*
-typedef enum {
-    HANDSHAKING,
-    STATUS,
-    CONFIGURATION,
-    LOGIN,
-    PLAY,
-} PacketState;
 
-typedef enum {
-    SERVER,
-    CLIENT
-} PacketBound;
-*/
 extern const DataType data_types[];
 extern const int DATA_TYPE_COUNT;
 
@@ -48,12 +35,14 @@ int datatype_is_keyword_supported(const char *keyword, int protocol);
 const char *datatype_get_type_name_from_keyword(const char *keyword, int protocol);
 
 const PacketState *packet_state_get_by_keyword(const char *keyword, int protocol);
+const PacketState *packet_state_get_by_keyword_general(const char *keyword);
 int packet_state_is_supported_general(const char *keyword);
 int packet_state_is_supported(const char *keyword, int protocol);
 void packet_state_print_all_for_protocol(int protocol);
 const char *packet_state_get_type_name(const char *keyword, int protocol);
 
 const PacketBound *packet_bound_get_by_keyword(const char *keyword, int protocol);
+const PacketBound *packet_bound_get_by_keyword_general(const char *keyword);
 int packet_bound_is_supported_general(const char *keyword);
 int packet_bound_is_supported(const char *keyword, int protocol);
 void packet_bound_print_all_for_protocol(int protocol);

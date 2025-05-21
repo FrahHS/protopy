@@ -8,6 +8,7 @@ add_executable(mcpcomp
     src/util.c
     src/datatype.c
     src/lexer.c
+    src/mparser.c
 )
 
 target_include_directories(mcpcomp PRIVATE include)

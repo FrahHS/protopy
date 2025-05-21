@@ -422,6 +422,15 @@ const PacketState *packet_state_get_by_keyword(const char *keyword, int protocol
     return NULL;
 }
 
+const PacketState *packet_state_get_by_keyword_general(const char *keyword) {
+    for (int i = 0; i < PACKET_STATE_COUNT; i++) {
+        if (strcmp(packet_states[i].keyword, keyword) == 0) {
+            return &packet_states[i];
+        }
+    }
+    return NULL;
+}
+
 int packet_state_is_supported(const char *keyword, int protocol) {
     return packet_state_get_by_keyword(keyword, protocol) != NULL;
 }
@@ -473,6 +482,15 @@ const PacketBound *packet_bound_get_by_keyword(const char *keyword, int protocol
     for (int i = 0; i < PACKET_BOUND_COUNT; i++) {
         if (strcmp(packet_bound[i].keyword, keyword) == 0 &&
             packet_bound[i].protocol == protocol) {
+            return &packet_bound[i];
+        }
+    }
+    return NULL;
+}
+
+const PacketBound *packet_bound_get_by_keyword_general(const char *keyword) {
+    for (int i = 0; i < PACKET_BOUND_COUNT; i++) {
+        if (strcmp(packet_bound[i].keyword, keyword) == 0) {
             return &packet_bound[i];
         }
     }
